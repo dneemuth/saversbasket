@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="no-js"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="description"
+	content="SaversBasket - BarcodeScanner lets you easily scan barcode." />
+<meta http-equiv="Content-Security-Policy"
+	content="upgrade-insecure-requests">
+<title>SaversBasket | Scan Product</title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="images/favicon.ico" />
+
+<!-- Library / Plugin Css Build -->
+<link rel="stylesheet" href="css/libs.min.css">
+
+<!-- fontawsome Css Build -->
+<link rel="stylesheet"
+	href="vendor/@fortawesome/fontawesome-free/css/all.min.css">
+<!-- Custom Css -->
+<link rel="stylesheet" href="css/foodsto.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- barcode api
+<script id="BarcodeScannerIOScript"
+	src="https://barcodescanner.io/js/BarcodeScannerIO.min.js"></script> -->
+</head>
+<body class="">
+	<span class="screen-darken"></span>
+	<!-- loader Start -->
+	<div id="loading">
+		<div class="loader simple-loader">
+			<div class="loader-body"></div>
+		</div>
+	</div>
+	<!-- loader END -->
+	<main class="main-content">
+		<!--header area start-->
+		<div th:replace="page-template.html :: header"></div>
+		<!--header area end-->
+
+		<div class="iq-height" style="height: 89px;"></div>
+		<!--Nav End-->
+		<div class="text-left iq-breadcrumb-one iq-bg-over black"
+			style="background: url(images/banner/pages-banner.png); background-size: contain;">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-sm-12">
+						<nav aria-label="breadcrumb" class="text-center iq-breadcrumb-two">
+							<h2 class="title">Scan Product</h2>
+							<ol class="breadcrumb main-bg">
+								<li class="breadcrumb-item"><a th:href="@{/}"><i
+										class="fas fa-home me-2"></i>Home</a></li>
+								<li class="breadcrumb-item">Scan Product</li>
+							</ol>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="section-padding-120 position-relative">
+
+			<!-- img src="images/banner/shap-11.png"
+				class="background-img background-img-np1 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="shap-11"> <img
+				src="images/banner/banner-shap-2.png"
+				class="background-img background-img-np2 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="banner-shap-2" -->
+			<div class="container">
+
+				<div class="row">
+					<div class="col-xl-5" id="contributeProductSectionId">
+						<div class="card content-card">
+							<div class="card-body ">
+								<h4>
+									<i class="fas fa-qrcode"></i><span class="ms-3">Hit the button to scan</span>
+								</h4>
+								<p></p>
+								<div class="mt-3">
+									<div class="iq-content mt-3">
+										Scanning requires access to your camera. The image or barcode data is shared with saversbasket.io for production information retrieval. Please see our privacy policy for more information.
+									</div>
+								</div>
+								<p></p>
+								<div class="iq-btn-container">
+									<a id="scanProductBtn" class="">
+										<div class="btn btn-secondary animation-btn">
+											Scan Product <i aria-hidden="true"
+												class="fas fa-barcode ms-2"></i>
+										</div>
+									</a>
+									<div id="iq-animated-scan">
+										<img id="animatedScanGif" alt="animated scanning"
+											src="images/animated/barcode-scanning.gif" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+
+				<form action="/addProduct" method="post"
+					enctype="multipart/form-data" id="scannedProductForm"
+					acceptcharset="UTF-8">
+					<div class="row">
+						<div class="col-lg-12 mt-2">
+							<div class="row">
+								<div class="col-xl-5">
+									<div class="product-slider swiper-container">
+										<div
+											style="-swiper-navigation-color: #fff; -swiper-pagination-color: #fff"
+											class="swiper mySwiper2">
+											<div class="swiper-wrapper">
+												<div class="swiper-slide">
+													<img id="productImageTag" alt="product-15"
+														src="images/product/new-product/1.jpg" />
+												</div>
+												<div class="swiper-slide">
+													<img alt="product-16"
+														src="images/product/new-product/02.jpg" />
+												</div>
+												<div class="swiper-slide">
+													<img alt="product-17"
+														src="images/product/new-product/01.jpg" />
+												</div>
+											</div>
+										</div>
+										<div class="swiper mySwiper">
+											<div class="swiper-wrapper">
+												<!-- div class="swiper-slide">
+													<img alt="product-19"
+														src="images/product/new-product/1.jpg" />
+												</div>
+												<div class="swiper-slide">
+													<img alt="product-20"
+														src="images/product/new-product/2.jpg" />
+												</div>
+												<div class="swiper-slide">
+													<img alt="product-21"
+														src="images/product/new-product/3.jpg" />
+												</div-->
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-7">
+									<div class="card content-card">
+										<div class="card-body ">
+											<h2>
+												<span id="productNameDisplay"></span>
+											</h2>
+											<!-- p>Some description about the product.</p-->
+											<div class="iq-product-policy">
+												<span class="text-black fs-5 me-1">Categories:</span> <a
+													href="javascript:void(0)" class="iq-product-policy"
+													rel="tag">General</a>, <a href="javascript:void(0)"
+													class="iq-product-policy" rel="tag">Category1</a>
+											</div>
+											<div class="iq-product-shop">
+											<span class="text-black fs-5 me-1">Business:</span> <a
+												href="javascript:void(0)" class="iq-product-policy"
+												rel="tag"><span id="linkedBusinessId"></span></a>,
+											</div>
+											
+											<!-- div class="mt-4">
+												<div class="iq-ratings d-flex ">
+													<ul
+														class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+														<li><i class="fas fa-star"></i></li>
+														<li><i class="fas fa-star"></i></li>
+														<li><i class="fas fa-star"></i></li>
+														<li><i class="fas fa-star"></i></li>
+														<li><i class="fas fa-star"></i></li>
+													</ul>
+													<a href="#reviews" class="ms-4 review-link" rel="nofollow">(<span
+														class="count">1</span> customer review)
+													</a>
+												</div>
+											</div-->
+											<div>
+												<p class="text-primary fs-4 mt-2">
+													MUR<span id="productPrice"></span>
+												</p>
+											</div>
+											<div class="iq-team-social col-12 col-sm-12 mt-4">
+												<ul>
+													<!-- li>
+		                                                <a href="javascript:void(0)">
+		                                                    <i class="fab fa-facebook"></i>
+		                                                </a>
+		                                            </li>
+		                                            <li>
+		                                                <a href="javascript:void(0)">
+		                                                    <i class="fab fa-twitter"></i>
+		                                                </a>
+		                                            </li>
+		                                            <li>
+		                                                <a href="javascript:void(0)">
+		                                                    <i class="fab fa-google-plus-g"></i>
+		                                                </a>
+		                                            </li>
+		                                            <li>
+		                                                <a href="javascript:void(0)">
+		                                                    <i class="fab fa-instagram"></i>
+		                                                </a>
+		                                            </li-->
+												</ul>
+											</div>
+											<!-- div class="mt-3">
+												<div class="block">
+													<ul>
+														<li><a href="javascript:void(0)" class="review-link"
+															target="_blank"> <i class="fas fa-shield-alt"></i> <span
+																class="ms-3">Security policy </span>
+														</a></li>
+														<li><a href="javascript:void(0)" class="review-link"
+															target="_blank"> <i class="fas fa-car-side"></i> <span
+																class="ms-3">Delivery policy </span>
+														</a></li>
+														<li><a href="" class="review-link" target="_blank">
+																<i class="fas fa-exchange-alt"></i> <span class="ms-3">Return
+																	policy </span>
+														</a></li>
+													</ul>
+												</div>
+											</div-->
+											
+											<div class="mt-3">
+												<a id="changeProductInfoId" class="">
+													<div class="btn btn-primary animation-btn">
+														Update Product Information <i aria-hidden="true"
+															class="fas fa-tag ms-2"></i>
+													</div>
+												</a>
+											</div>											
+											
+										</div>
+									</div>
+								</div>
+								<!--  Add Product To System -->
+								<div class="col-xl-7" id="contributeProductSectionId">
+									<div class="card content-card">
+										<div class="card-body ">
+											<h4>
+												<i class="fas fa-hand-holding-heart"></i><span class="ms-3">Contribute & Earn Rewards</span>
+											</h4>
+											<p></p>
+											<div class="iq-product-policy" id="addProductToSystemId"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- div class="col-lg-12">
+							<div class="card mt-4">
+								<div class="card-body">
+									<div class="tabs-wrapper">
+										<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+											<li class="nav-item" role="presentation"
+												style="margin-right: 15px;"><a class="nav-link active"
+												id="pills-description-tab" data-bs-toggle="pill"
+												data-bs-target="#pills-description"
+												href="javascript:void(0)" role="tab"
+												aria-controls="pills-description" aria-selected="true">Description</a>
+											</li>
+											<li class="nav-item" role="presentation"
+												style="margin-right: 15px;"><a class="nav-link"
+												id="pills-additional-information-tab" data-bs-toggle="pill"
+												data-bs-target="#pills-additional-information"
+												href="javascript:void(0)" role="tab"
+												aria-controls="pills-additional-information"
+												aria-selected="false">Additional information</a></li>
+											<li class="nav-item" role="presentation"
+												style="margin-right: 15px;"><a class="nav-link"
+												id="pills-reviews-tab" data-bs-toggle="pill"
+												data-bs-target="#pills-reviews" href="javascript:void(0)"
+												role="tab" aria-controls="pills-reviews"
+												aria-selected="false">Reviews (1)</a></li>
+										</ul>
+									</div>
+									<div class="tab-content" id="pills-tabContent">
+										<div class="tab-pane fade show active" id="pills-description"
+											role="tabpanel" aria-labelledby="pills-description-tab">
+											<div class="tabs-panel">
+												<p class="mb-3">Pellentesque aliquet, sem eget laoreet
+													ultrices, ipsum metus feugiat sem, quis fermentum turpis
+													eros eget velit. Donec ac tempus ante. Fusce ultricies
+													massa massa. Fusce aliquam, purus eget sagittis vulputate,
+													sapien libero hendrerit est, sed commodo augue nisi non
+													neque. Lorem ipsum dolor sit amet, consectetur adipiscing
+													elit. Sed tempor, lorem et placerat vestibulum, metus nisi
+													posuere nisl, in accumsan elit odio quis mi. Cras neque
+													metus, consequat et blandit et.</p>
+												<div class="product-images-list row mb-3">
+													<div class="col-lg-3 col-md-6">
+														<img src="images/product/new-product/11.png"
+															class="img-fluid" alt="5">
+													</div>
+													<div class="sm-top col-lg-3 col-md-6">
+														<img src="images/product/new-product/12.png"
+															class="img-fluid" alt="6">
+													</div>
+													<div class="md-top col-lg-3 col-md-6">
+														<img src="images/product/new-product/13.png"
+															class="img-fluid" alt="7">
+													</div>
+													<div class="md-top col-lg-3 col-md-6">
+														<img src="images/product/new-product/14.png"
+															class="img-fluid" alt="8">
+													</div>
+												</div>
+												<ul class="mb-3 text-primary">
+													<li>Heart health and stroke prevention</li>
+													<li>The health of the next generation</li>
+													<li>Strong bones and teeth</li>
+													<li>Better mood</li>
+												</ul>
+												<p>Pellentesque aliquet, sem eget laoreet ultrices,
+													ipsum metus feugiat sem, quis fermentum turpis eros eget
+													velit. Donec ac tempus ante. Fusce ultricies massa massa.
+													Fusce aliquam, purus eget sagittis vulputate, sapien libero
+													hendrerit est, sed commodo augue nisi non neque.</p>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="pills-additional-information"
+											role="tabpanel"
+											aria-labelledby="pills-additional-information-tab">
+											<div class="tabs-panel">
+												<table class="shop-attributes">
+													<tr>
+														<th>weight</th>
+														<td><p>1Kg,2Kg,3Kg</p></td>
+													</tr>
+													<tr>
+														<th>It&#039;s Healthy</th>
+														<td><p>Yes</p></td>
+													</tr>
+													<tr>
+														<th>Dimensions</th>
+														<td><p>5 x 5 x 10 cm</p></td>
+													</tr>
+												</table>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="pills-reviews" role="tabpanel"
+											aria-labelledby="pills-reviews-tab">
+											<div class="tabs-panel">
+												<h5>
+													1 review for <span>Broccoli</span>
+												</h5>
+												<div
+													class="iq-main d-flex flex-wrap justify-content-between pb-3">
+													<div class="d-flex flex-wrap">
+														<div class="iq-img me-4 mt-3">
+															<img alt='img-21' src='../assets/images/blog/11.png'
+																class='img-fluid rounded-pill avatar avatar-60 photo'
+																height='60' width='60' loading='lazy' />
+														</div>
+														<div class="iq-content mt-3">
+															<h5 class="mb-0">ADMIN</h5>
+															<p class="mb-0 text-primary">SEPTEMBER 8, 2021</p>
+															<p>
+																On behalf of us all – thank you for making our evening
+																such an enjoyable one!<br />Your hard work and
+																consideration were very much appreciated.
+															</p>
+														</div>
+													</div>
+													<div class="iq-stars">
+														<div class="iq-ratings">
+															<ul
+																class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+																<li><i class="fas fa-star"></i></li>
+																<li><i class="fas fa-star"></i></li>
+																<li><i class="fas fa-star"></i></li>
+																<li><i class="fas fa-star"></i></li>
+																<li><i class="fas fa-star"></i></li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												<div id="respond" class="comment-respond mt-3">
+													<span class="fs-5">Add a review</span>
+													<form>
+														<p class="mb-3">Your email address will not be
+															published. Required fields are marked *</p>
+														<div class="d-flex mb-2">
+															<h6>
+																Your rating&nbsp;<span class="required">*</span>
+															</h6>
+															<div class="iq-ratings ms-4">
+																<ul
+																	class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+																	<li><i class="far fa-star"></i></li>
+																	<li><i class="far fa-star"></i></li>
+																	<li><i class="far fa-star"></i></li>
+																	<li><i class="far fa-star"></i></li>
+																	<li><i class="far fa-star"></i></li>
+																</ul>
+															</div>
+														</div>
+														<div class="mb-3 ">
+															<label for="message" class="form-label">Your
+																review *</label>
+															<textarea class="form-control mb-3" id="message" rows="3"></textarea>
+														</div>
+														<div class="row">
+															<div class="col-md-6">
+																<div>
+																	<label for="exampleInputPassword1" class="form-label">Name
+																		*</label> <input type="password" class="form-control"
+																		id="exampleInputPassword1">
+																</div>
+															</div>
+															<div class="col-md-6 mb-3">
+																<div>
+																	<label for="floatingInput" class="form-label">Email
+																		*</label> <input type="email" class="form-control"
+																		id="floatingInput">
+																</div>
+															</div>
+														</div>
+														<div class="mb-4">
+															<input type="checkbox" class="form-check-input"
+																id="exampleCheck1"> <label
+																class="form-check-label" for="exampleCheck1">Save
+																my name, email, and website in this browser for the next
+																time I comment.</label>
+														</div>
+														<p class="form-submit">
+															<input name="submit" type="submit" id="submit"
+																class="submit" value="Submit" /> <input type='hidden'
+																name='comment_post_ID' value='583' id='comment_post_ID' />
+															<input type='hidden' name='comment_parent'
+																id='comment_parent' value='0' />
+														</p>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div-->
+						<!-- div class="col-12 section-padding-120 section-padding-90">
+                    <div class="iq-title-box text-center">
+                        <span class="iq-subtitle">Produced</span>
+                        <h2 class="iq-title">Related products</h2>
+                        <div class="iq-title-divider"></div>
+                    </div>
+                    <div class="related-product overflow-hidden">
+                        <ul  class="swiper-wrapper list-inline m-0 p-0">
+                            <li class="swiper-slide">
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="iq-product-image">
+                                            <img src="images/product/17.jpg" class="hover_image" alt="img">
+                                        </div>
+                                        <div class="iq-product-content mt-3">
+                                            <p class="mb-0"><small>Fruits,Vegetables</small></p>
+                                            <a href="../product/new-product.html" class="iq-product-title-link h5">Fruit Frozen</a>
+                                            <div class="d-flex align-items-center justify-content-between my-2">
+                                                <h6 class="m-0">
+                                                    <span class="text-decoration-line-through"></span>
+                                                    <span class="text-primary"><b>$5</b></span>
+                                                </h6>
+                                                <div class="iq-ratings">
+                                                    <div class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div class="iq-btn-container">
+                                                    <a class="" href="javascript:void(0)" data-alert="sweetalert-product">
+                                                        <div class="btn btn-secondary animation-btn">
+                                                            Add To Card
+                                                            <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="iq-product-icon">
+                                                        <a href="javascript:void(0)" data-alert="sweetalert-heart">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="iq-product-icon ms-2">
+                                                        <a href="../cart.html">		
+                                                        <i class=" fa fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="swiper-slide">
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="iq-product-image">
+                                            <img src="images/product/10.jpg" class="hover_image" alt="img">
+                                        </div>
+                                        <div class="iq-product-content mt-3">
+                                            <p class="mb-0"><small>Fruit Yogurt,Fruits</small></p>
+                                            <a href="../product/new-product.html" class="iq-product-title-link h5">Grapes</a>
+                                            <div class="d-flex align-items-center justify-content-between my-2">
+                                                <h6 class="m-0">
+                                                    <span class="text-decoration-line-through">$10</span>
+                                                    <span class="text-primary"><b>$8</b></span>
+                                                </h6>
+                                                <div class="iq-ratings">
+                                                    <div class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div class="iq-btn-container">
+                                                    <a class="" href="javascript:void(0)" data-alert="sweetalert-product">
+                                                        <div class="btn btn-secondary animation-btn">
+                                                            Add To Card
+                                                            <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="iq-product-icon">
+                                                        <a href="javascript:void(0)" data-alert="sweetalert-heart">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="iq-product-icon ms-2">
+                                                        <a href="../cart.html">		
+                                                        <i class=" fa fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="swiper-slide">
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="iq-product-image">
+                                            <img src="../assets/images/product/18.jpg" class="hover_image" alt="img">
+                                        </div>
+                                        <div class="iq-product-content mt-3">
+                                            <p class="mb-0"><small>Vegetables</small></p>
+                                            <a href="../product/new-product.html" class="iq-product-title-link h5">Garlic</a>
+                                            <div class="d-flex align-items-center justify-content-between my-2">
+                                                <h6 class="m-0">
+                                                    <span class="text-decoration-line-through">$5.90</span>
+                                                    <span class="text-primary"><b>$30</b></span>
+                                                </h6>
+                                                <div class="iq-ratings">
+                                                    <div class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div class="iq-btn-container">
+                                                    <a class="" href="javascript:void(0)" data-alert="sweetalert-product">
+                                                        <div class="btn btn-secondary animation-btn">
+                                                            Add To Card
+                                                            <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="iq-product-icon">
+                                                        <a href="javascript:void(0)" data-alert="sweetalert-heart">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="iq-product-icon ms-2">
+                                                        <a href="../cart.html">		
+                                                        <i class=" fa fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="swiper-slide">
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="iq-product-image">
+                                            <img src="images/product/05.jpg" class="hover_image" alt="img">
+                                        </div>
+                                        <div class="iq-product-content mt-3">
+                                            <p class="mb-0"><small>Fruits</small></p>
+                                            <a href="../product/new-product.html" class="iq-product-title-link h5">Pistachio</a>
+                                            <div class="d-flex align-items-center justify-content-between my-2">
+                                                <h6 class="m-0">
+                                                    <span class="text-decoration-line-through"></span>
+                                                    <span class="text-primary"><b>$135</b></span>
+                                                </h6>
+                                                <div class="iq-ratings">
+                                                    <div class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div class="iq-btn-container">
+                                                    <a class="" href="javascript:void(0)" data-alert="sweetalert-product">
+                                                        <div class="btn btn-secondary animation-btn">
+                                                            Add To Card
+                                                            <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="iq-product-icon">
+                                                        <a href="javascript:void(0)" data-alert="sweetalert-heart">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="iq-product-icon ms-2">
+                                                        <a href="../cart.html">		
+                                                        <i class=" fa fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="swiper-slide">
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="iq-product-image">
+                                            <img src="images/product/17.jpg" class="hover_image" alt="img">
+                                        </div>
+                                        <div class="iq-product-content mt-3">
+                                            <p class="mb-0"><small>Fruits,Vegetables</small></p>
+                                            <a href="../product/new-product.html" class="iq-product-title-link h5">Fruit Frozen</a>
+                                            <div class="d-flex align-items-center justify-content-between my-2">
+                                                <h6 class="m-0">
+                                                    <span class="text-decoration-line-through"></span>
+                                                    <span class="text-primary"><b>$5</b></span>
+                                                </h6>
+                                                <div class="iq-ratings">
+                                                    <div class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div class="iq-btn-container">
+                                                    <a class="" href="javascript:void(0)" data-alert="sweetalert-product">
+                                                        <div class="btn btn-secondary animation-btn">
+                                                            Add To Card
+                                                            <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="iq-product-icon">
+                                                        <a href="javascript:void(0)" data-alert="sweetalert-heart">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="iq-product-icon ms-2">
+                                                        <a href="../cart.html">		
+                                                        <i class=" fa fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="swiper-slide">
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="iq-product-image">
+                                            <img src="images/product/10.jpg" class="hover_image" alt="img">
+                                        </div>
+                                        <div class="iq-product-content mt-3">
+                                            <p class="mb-0"><small>Fruit Yogurt,Fruits</small></p>
+                                            <a href="../product/new-product.html" class="iq-product-title-link h5">Grapes</a>
+                                            <div class="d-flex align-items-center justify-content-between my-2">
+                                                <h6 class="m-0">
+                                                    <span class="text-decoration-line-through">$10</span>
+                                                    <span class="text-primary"><b>$8</b></span>
+                                                </h6>
+                                                <div class="iq-ratings">
+                                                    <div class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                                                                    <i class="fas fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                                    <i class="far fa-star fa-xs me-1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <div class="iq-btn-container">
+                                                    <a class="" href="javascript:void(0)" data-alert="sweetalert-product">
+                                                        <div class="btn btn-secondary animation-btn">
+                                                            Add To Card
+                                                            <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="iq-product-icon">
+                                                        <a href="javascript:void(0)" data-alert="sweetalert-heart">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="iq-product-icon ms-2">
+                                                        <a href="../cart.html">		
+                                                        <i class=" fa fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div-->
+					</div>
+			</div>
+		</div>
+
+
+		<!--  display same products if any -->
+		<section
+			class="organic-products section-padding-120 pb-0 position-relative">		
+			<div class="container">
+				<div class="scrolling-text text-center">
+					<div data-iq-gsap="onStart" data-iq-opacity="1"
+						data-iq-position-x="200" data-iq-trigger="scroll"
+						data-iq-scroll-scrub="true" data-iq-ease="power.inOut">
+						Compare</div>
+				</div>
+				<div class="iq-title-box text-center">
+					<span class="iq-subtitle"></span>
+					<h3 class="iq-title">Price(s) In Other Stores</h3>
+					<div class="iq-title-divider"></div>
+				</div>
+				<div class="row">				
+					<div class="col-lg-8">
+						<div class="iq-product-block" id="iq-same-products-block">
+							<div class="row">						
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		</form>
+
+		<div th:replace="page-template.html :: footer"></div>
+
+		<div id="back-to-top">
+			<a class="top" id="top" href="#top"> <svg width="30"
+					viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 15.5L12 8.5L19 15.5" stroke="currentColor"
+						stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+			</a>
+		</div>
+	</main>
+	<!-- Wrapper End-->
+	<!-- Library Bundle Script -->
+	<script src="js/libs.min.js"></script>
+
+	<!-- GSAP Animation JS-->
+	<script src="vendor/gsap/gsap.min.js"></script>
+	<script src="vendor/gsap/ScrollTrigger.min.js"></script>
+
+	<!-- App Script -->
+	<script src="js/app.js"></script>
+
+	<!-- Gsap Animation Init -->
+	<script src="js/gsap.js"></script>
+
+	<!-- Slider Script -->
+	<script src="js/slider.js"></script>
+
+	<script>
+	
+		var presentBarcode;
+		$(document).ready(function() {
+			$('#scannedProductForm').hide();
+			/** hide scanning */
+			$('#iq-animated-scan').hide();	
+				
+		});
+		
+		
+		/** JS Function to change Product Information */
+		document.getElementById('changeProductInfoId').onclick = function() {
+			
+			$
+			.ajax({
+				type : "post",
+				url : "api/v1/basket/getScannedProductInfo",
+				cache : false,
+				data : 'barcode=' + presentBarcode + '&changeInfo=true',
+				success : function(response) {						
+					
+					$('#contributeProductSectionId').show();
+
+					/** auto-populate fields */
+					$('#productNameDisplay').text(response.productName);
+				
+					/** Load Product Image from FoorFacts API */
+					if (response.productPictureUrl != null) {
+						$('#productImageTag')
+								.attr("src",response.productPictureUrl);
+					}
+				
+					productTypeAjax();
+					retrieveAllBusinessAjax();
+				
+					/** clear dynamic contents */
+					$('#addProductToSystemId').html('');
+					$('#addProductToSystemId').after('');
+				
+					$('#addProductToSystemId')
+							.append(
+									'<input name="modeOfEntry" value="scanned" type="hidden">');
+					$('#addProductToSystemId')
+							.append(
+									'<div class="col-md-6 mb-4"><div class="mb-3"><label> Product Name (required)</label><input name="productName" id="productName" placeholder="Product Name *" type="text" value="'+response.productName+'"></div></div>');
+					
+
+					$('#addProductToSystemId')
+							.append(
+									'<div class="col-md-6 mb-4"><div class="mb-3"><label> Product Barcode (required)</label><input name="productBarcode" id="productBarcode" placeholder="Product Barcode *" type="text" value="'+response.productBarCode+'" maxlength="13"></div></div>');
+				
+					$('#addProductToSystemId')
+							.append(
+									'<div class="col-md-6 mb-4"><div class="mb-3"><label> Product Price (required)</label><input name="price" id="price" placeholder="Product price *" type="text" value="0" maxlength="10"></div></div>');
+				
+					if (response.productPictureUrl != null) {
+						$('#addProductToSystemId')
+								.append(
+										'<input name="pictureUrlFromScanning" value="'+response.productPictureUrl+'" type="hidden">');
+				
+					} else {
+						$('#addProductToSystemId')
+								.append(
+										'<div class="row"><div class="col-md-12 mb-4"><div class="form mb-2"><div id="askForProductPicture"><label for="upload-file-input">Upload your file:</label><input id="upload-file-input" type="file" name="file" accept="*" /></div></div></div></div>');
+					}
+				
+					$('#addProductToSystemId')
+							.append(
+									'<div class="contact_message content"><h6>Linked Business</h6><ul><li><span class="lnr lnr-store"></span> <span><label>Business(required)</label></span><select name="idBusiness" id="idBusiness"></select></li></ul></div><div class="contact_message content"><h6>Product Classification</h6><ul><li><i class="fa fa-tag"></i> <label>Category (required)</label><select name="idProductType" id="idProductType"></select></li></ul></div>');
+					
+					if(!$("#contributeProductBtn").length) {
+						$('#addProductToSystemId')
+						.after(
+								'<div class="iq-btn-container"><a id="contributeProductBtn" class="" onclick="addProductToSystem()"><div class="btn btn-secondary animation-btn">Contribute Product<i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i></div></a></div>');
+				
+					}
+					
+				}			
+			});
+				
+		}
+
+		document.getElementById('scanProductBtn').onclick = function() {
+			/** show scanning */
+			//$('#iq-animated-scan').show();
+						
+			let options = {
+				caption : "Scan product ...",
+				scanCompleteCallback : function(result) {
+					//simulate scan sound.						
+					beep();
+					// show toast if barcode detected
+					toastr.info('barcode detected:'+result.text );
+					presentBarcode = result.text;
+					
+					/** hide scanning */
+					$('#iq-animated-scan').hide();
+					$('#scannedProductForm').show();
+
+					$
+					.ajax({
+						type : "post",
+						url : "api/v1/basket/getScannedProductInfo",
+						cache : false,
+						data : 'barcode=' + result.text + '&changeInfo=false',
+						success : function(response) {				
+						
+
+							/** No match found for product */
+							if (response.productName === null) {
+								
+								//show modal form
+								Swal.fire({
+									title: 'Product not found in system',
+									icon: 'info',
+									timer: 10000,
+									timerProgressBar: true,
+									html:
+										'Contribute Product Information And Earn Some Rewards.',
+									showCloseButton: true,
+									showCancelButton: true,
+									focusConfirm: false,
+									confirmButtonText:
+										'<i class="fa fa-thumbs-up"></i> Great!',
+									confirmButtonAriaLabel: 'Thumbs up, great!',
+									cancelButtonText:
+										'<i class="fa fa-thumbs-down"></i> Cancel',
+									cancelButtonAriaLabel: 'Thumbs down, Cancel'
+								}).then((result) => {
+									if (result.value) {
+										window.location.href = 'newProduct.html?barcode='+ response.productBarCode;
+									}
+								});
+
+							} else {
+								
+								/** Focus on Price field */
+								$("#price").focus();
+
+								/** Got response ffrom SVN API */
+								if (response.productEntrySource === 'SAVERSBASKETAPI'
+										|| response.productPresentInDatabase) {
+
+									//$('#contributeProductSectionId').hide();
+
+									/** auto-populate fields */
+									$('#productNameDisplay').text(
+											response.productName);
+
+									if (response.updatedprice != null) {
+										$('#productPrice').text(
+												response.updatedprice);
+									}
+									
+									/** Linked Business */
+									if (response.businessName != null) {
+										$('#linkedBusinessId').text(response.businessName);
+									}
+
+									/** Picture URL */
+									if (response.imageUrl != null) {
+										$('#productImageTag').attr(
+												"src",
+												response.imageUrl);
+									} else {
+										$('#productImageTag')
+												.attr("src",
+														"images/product/new-product/1.jpg");
+									}									
+									
+									/** Show same products 	*/								
+									$
+									.each(
+									response.sameProducts,
+									function(index, value) {
+																		
+										$(
+										'#iq-same-products-block .row')
+										.append('<div class="col-lg-6 col-md-6"><div class="card card-product"><div class="card-header"><i class="fas fa-store" aria-hidden="true"></i>   <span class="businessNameFormat">'+value.businessName+'</span></div><div class="card-body"><a href="../viewProduct?pid=' + value.encryptedProductKey + '"><div class="d-flex align-items-center"><div class="iq-product-img iq-product-image me-3"><img src="'+value.imageUrl+'" class="img-fluid" alt="product-image"></div><div class="iq-product-info"><h5>'+value.productName+'</h5><h5 class="text-primary">MUR'+value.updatedprice.toFixed(2).toString()+'</h5></div></div></a></div></div></div>');
+										
+									}); 									
+
+								}
+								/** show section to add product */
+								else {
+
+									toastr
+											.info('Get some rewards for contributing product information !');
+
+									$('#contributeProductSectionId')
+											.show();
+
+									/** auto-populate fields */
+									$('#productNameDisplay').text(
+											response.productName);
+
+									/** Load Product Image from FoorFacts API */
+									if (response.productPictureUrl != null) {
+										$('#productImageTag')
+												.attr(
+														"src",
+														response.productPictureUrl);
+									}
+
+									productTypeAjax();
+									retrieveAllBusinessAjax();
+
+									/** clear dynamic contents */
+									$('#addProductToSystemId').html('');
+									$('#addProductToSystemId')
+											.after('');
+
+									$('#addProductToSystemId')
+											.append(
+													'<input name="modeOfEntry" value="scanned" type="hidden">');
+									$('#addProductToSystemId')
+											.append(
+													'<div class="col-md-6 mb-4"><div class="mb-3"><label> Product Name (required)</label><input name="productName" id="productName" placeholder="Product Name *" type="text" value="'+response.productName+'"></div></div>');
+									$('#addProductToSystemId')
+											.append(
+													'<div class="col-md-6 mb-4"><div class="mb-3"><label> Product Barcode (required)</label><input name="productBarcode" id="productBarcode" placeholder="Product Barcode *" type="text" value="'+response.productBarCode+'" maxlength="13"></div></div>');
+
+									$('#addProductToSystemId')
+											.append(
+													'<div class="col-md-6 mb-4"><div class="mb-3"><label> Product Price (required)</label><input name="price" id="price" placeholder="Product price *" type="text" value="0" maxlength="10"></div></div>');
+
+									if (response.productPictureUrl != null) {
+										$('#addProductToSystemId')
+												.append(
+														'<input name="pictureUrlFromScanning" value="'+response.productPictureUrl+'" type="hidden">');
+
+									} else {
+										$('#addProductToSystemId')
+												.append(
+														'<div class="row"><div class="col-md-12 mb-4"><div class="form mb-2"><div id="askForProductPicture"><label for="upload-file-input">Upload your file:</label><input id="upload-file-input" type="file" name="file" accept="*" /></div></div></div></div>');
+									}
+
+									$('#addProductToSystemId')
+											.append(
+													'<div class="contact_message content"><h6>Linked Business</h6><ul><li><span class="lnr lnr-store"></span> <span><label>Business(required)</label></span><select name="idBusiness" id="idBusiness"></select></li></ul></div><div class="contact_message content"><h6>Product Classification</h6><ul><li><i class="fa fa-tag"></i> <label>Category (required)</label><select name="idProductType" id="idProductType"></select></li></ul></div>');
+									
+									if(!$("#contributeProductBtn").length) {
+										$('#addProductToSystemId')
+										.after(
+												'<div class="iq-btn-container"><a id="contributeProductBtn" class="" onclick="addProductToSystem()"><div class="btn btn-secondary animation-btn">Contribute Product<i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i></div></a></div>');
+
+									}
+									
+								}
+							}
+						}
+					});
+
+				},
+				scanCanceledCallback : function() {
+					Swal.fire('Scan canceled', '', 'info');
+					/** hide scanning */
+					$('#iq-animated-scan').hide();
+				},
+				noCameraFoundCallback : function() {
+					Swal.fire('No camera found', '', 'info');
+					/** hide scanning */
+					$('#iq-animated-scan').hide();
+				},
+				noCameraPermissionCallback : function() {
+					Swal.fire('Permission to camera not granted', '', 'info');
+					/** hide scanning */
+					$('#iq-animated-scan').hide();
+				},
+				
+			};
+			BarcodeScannerIO.openScanner('6e9bf6a2bc1c44048a72be89c36a4894',
+					options);	
+		};
+
+		function beep() {
+			var snd = new Audio(
+					"data:audio/wav;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkWgAI0wWs/ItAAAGDgYtAgAyN+QWaAAihwMWm4G8QQRDiMcCBcH3Cc+CDv/7xA4Tvh9Rz/y8QADBwMWgQAZG/ILNAARQ4GLTcDeIIIhxGOBAuD7hOfBB3/94gcJ3w+o5/5eIAIAAAVwWgQAVQ2ORaIQwEMAJiDg95G4nQL7mQVWI6GwRcfsZAcsKkJvxgxEjzFUgfHoSQ9Qq7KNwqHwuB13MA4a1q/DmBrHgPcmjiGoh//EwC5nGPEmS4RcfkVKOhJf+WOgoxJclFz3kgn//dBA+ya1GhurNn8zb//9NNutNuhz31f////9vt///z+IdAEAAAK4LQIAKobHItEIYCGAExBwe8jcToF9zIKrEdDYIuP2MgOWFSE34wYiR5iqQPj0JIeoVdlG4VD4XA67mAcNa1fhzA1jwHuTRxDUQ//iYBczjHiTJcIuPyKlHQkv/LHQUYkuSi57yQT//uggfZNajQ3Vmz+Zt//+mm3Wm3Q576v////+32///5/EOgAAADVghQAAAAA//uQZAUAB1WI0PZugAAAAAoQwAAAEk3nRd2qAAAAACiDgAAAAAAABCqEEQRLCgwpBGMlJkIz8jKhGvj4k6jzRnqasNKIeoh5gI7BJaC1A1AoNBjJgbyApVS4IDlZgDU5WUAxEKDNmmALHzZp0Fkz1FMTmGFl1FMEyodIavcCAUHDWrKAIA4aa2oCgILEBupZgHvAhEBcZ6joQBxS76AgccrFlczBvKLC0QI2cBoCFvfTDAo7eoOQInqDPBtvrDEZBNYN5xwNwxQRfw8ZQ5wQVLvO8OYU+mHvFLlDh05Mdg7BT6YrRPpCBznMB2r//xKJjyyOh+cImr2/4doscwD6neZjuZR4AgAABYAAAABy1xcdQtxYBYYZdifkUDgzzXaXn98Z0oi9ILU5mBjFANmRwlVJ3/6jYDAmxaiDG3/6xjQQCCKkRb/6kg/wW+kSJ5//rLobkLSiKmqP/0ikJuDaSaSf/6JiLYLEYnW/+kXg1WRVJL/9EmQ1YZIsv/6Qzwy5qk7/+tEU0nkls3/zIUMPKNX/6yZLf+kFgAfgGyLFAUwY//uQZAUABcd5UiNPVXAAAApAAAAAE0VZQKw9ISAAACgAAAAAVQIygIElVrFkBS+Jhi+EAuu+lKAkYUEIsmEAEoMeDmCETMvfSHTGkF5RWH7kz/ESHWPAq/kcCRhqBtMdokPdM7vil7RG98A2sc7zO6ZvTdM7pmOUAZTnJW+NXxqmd41dqJ6mLTXxrPpnV8avaIf5SvL7pndPvPpndJR9Kuu8fePvuiuhorgWjp7Mf/PRjxcFCPDkW31srioCExivv9lcwKEaHsf/7ow2Fl1T/9RkXgEhYElAoCLFtMArxwivDJJ+bR1HTKJdlEoTELCIqgEwVGSQ+hIm0NbK8WXcTEI0UPoa2NbG4y2K00JEWbZavJXkYaqo9CRHS55FcZTjKEk3NKoCYUnSQ0rWxrZbFKbKIhOKPZe1cJKzZSaQrIyULHDZmV5K4xySsDRKWOruanGtjLJXFEmwaIbDLX0hIPBUQPVFVkQkDoUNfSoDgQGKPekoxeGzA4DUvnn4bxzcZrtJyipKfPNy5w+9lnXwgqsiyHNeSVpemw4bWb9psYeq//uQZBoABQt4yMVxYAIAAAkQoAAAHvYpL5m6AAgAACXDAAAAD59jblTirQe9upFsmZbpMudy7Lz1X1DYsxOOSWpfPqNX2WqktK0DMvuGwlbNj44TleLPQ+Gsfb+GOWOKJoIrWb3cIMeeON6lz2umTqMXV8Mj30yWPpjoSa9ujK8SyeJP5y5mOW1D6hvLepeveEAEDo0mgCRClOEgANv3B9a6fikgUSu/DmAMATrGx7nng5p5iimPNZsfQLYB2sDLIkzRKZOHGAaUyDcpFBSLG9MCQALgAIgQs2YunOszLSAyQYPVC2YdGGeHD2dTdJk1pAHGAWDjnkcLKFymS3RQZTInzySoBwMG0QueC3gMsCEYxUqlrcxK6k1LQQcsmyYeQPdC2YfuGPASCBkcVMQQqpVJshui1tkXQJQV0OXGAZMXSOEEBRirXbVRQW7ugq7IM7rPWSZyDlM3IuNEkxzCOJ0ny2ThNkyRai1b6ev//3dzNGzNb//4uAvHT5sURcZCFcuKLhOFs8mLAAEAt4UWAAIABAAAAAB4qbHo0tIjVkUU//uQZAwABfSFz3ZqQAAAAAngwAAAE1HjMp2qAAAAACZDgAAAD5UkTE1UgZEUExqYynN1qZvqIOREEFmBcJQkwdxiFtw0qEOkGYfRDifBui9MQg4QAHAqWtAWHoCxu1Yf4VfWLPIM2mHDFsbQEVGwyqQoQcwnfHeIkNt9YnkiaS1oizycqJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=");
+			snd.play();
+		}
+
+		function addProductToSystem() {			
+			var data = new FormData($('#scannedProductForm')[0]);
+
+			$
+			.post({
+				url : 'api/v1/basket/addProduct',
+				data : data,
+				enctype : 'multipart/form-data',
+				processData : false,
+				contentType : false,
+				cache : false,
+				async : false,
+				beforeSend : function() {
+
+				},
+				success : function(res) {
+
+					if (res.validated) {
+						Swal.fire('New product has been created successfully!');
+
+						//Remove all errors
+						$('input').next().remove();
+						$('select').next().remove();
+
+					} else {
+
+						if (res.productAlreadyPresent) {
+							Swal.fire('Product already exists in system !');
+						} else {
+
+							productTypeAjax();
+							retrieveAllBusinessAjax();
+
+							//Set error messages
+							Swal.fire('New product could not be created.');
+
+							//Set error messages
+							$.each(res.errorMessages, function(key,
+									value) {
+								selectByName(key, value);
+							});
+						}
+					}
+				},
+				complete : function(data) {
+				},
+				error : function(e) {
+				}
+			})
+		};
+
+		function productTypeAjax() {
+			$.ajax({
+				url : "api/v1/basket/getAllProductTypes",
+				type : "post",
+				success : function(response) {
+					$('#idProductType').empty();
+					$('#idProductType').append($('<option>', {
+						value : 0,
+						text : 'Select Product Type'
+					}));
+
+					$.each(response, function(index, value) {
+						$('#idProductType').append($('<option>', {
+							value : value.code,
+							text : value.name
+						}));
+					});
+				},
+				error : function(e) {					
+				}
+			});
+		};
+
+		function retrieveAllBusinessAjax() {
+			$.ajax({
+				url : "api/v1/basket/getAllValidBusinesses",
+				type : "post",
+				success : function(response) {
+					$('#idBusiness').empty();
+					$('#idBusiness').append($('<option>', {
+						value : 0,
+						text : 'Select linked business'
+					}));
+
+					$.each(response, function(index, value) {
+						$('#idBusiness').append($('<option>', {
+							value : value.idBusiness,
+							text : value.registeredName
+						}));
+					});
+				},
+				error : function(e) {
+				}
+			});
+		};
+
+		function selectByName(elementName, value) {
+			console.log("element : ", elementName + value);
+			element = $('[name="' + elementName + '"]');
+			element.next().remove();
+			//show error message
+			element.after('<span class="error-text">' + value + '</span>');
+		}
+	</script>
+
+	<!-- components -->
+
+	<!-- Toast JS -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+	<script th:inline="javascript">
+		var barcodeApiKey = /*[[${barcodeApiKey}]]*/ "";		
+	
+	    let barcodeJs = document.createElement("script");
+	    barcodeJs.setAttribute("id", "BarcodeScannerIOScript");
+	    barcodeJs.setAttribute("src", "https://barcodescanner.io/js/BarcodeScannerIO.min.js");
+		barcodeJs.setAttribute("data-api-key", barcodeApiKey);
+	    document.body.appendChild(barcodeJs);
+  </script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async
+		src="https://www.googletagmanager.com/gtag/js?id=G-CC2N6KJL6K"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-CC2N6KJL6K');
+	</script>
+</body>
+</html>

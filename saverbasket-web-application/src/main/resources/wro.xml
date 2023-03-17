@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<groups xmlns="http://www.isdc.ro/wro">
+    <group name="bundledCss"> 
+    	<css>/css/foodsto.css</css>
+    	<css>/css/lib.min.css</css>    		
+    </group>  
+    <group name="bundledJs">
+    	<js minimize="true">/js/anypicker.js</js>
+    	<js minimize="true">/js/app.js</js>
+		<js minimize="false">/js/jquery.countdown.js</js>
+		<js minimize="false">/js/gsap.js</js>
+		<js minimize="false">/js/jquery.elevatezoom.js</js>
+		<js minimize="false">/js/jquery.formautofill.min.js</js>			
+		<js minimize="false">/js/lib.min.js</js>
+		<js minimize="false">/js/slider.js</js>   
+    </group>  
+</groups>

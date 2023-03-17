@@ -1,0 +1,1154 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-1">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="account">
+            <column name="idAccount" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="accountType" type="INT"/>
+            <column name="apiKey" type="VARCHAR(200)"/>
+            <column defaultValueComputed="NULL" name="budgetedAmount" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="dateAccountCreated" type="datetime"/>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-2">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="account_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-3">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="address">
+            <column name="idAddress" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="activeAddress" type="VARCHAR(255)"/>
+            <column name="address1" type="VARCHAR(120)"/>
+            <column name="address2" type="VARCHAR(120)"/>
+            <column name="address3" type="VARCHAR(120)"/>
+            <column defaultValueComputed="NULL" name="addressType" type="INT"/>
+            <column name="city" type="VARCHAR(100)"/>
+            <column name="country" type="VARCHAR(50)"/>
+            <column name="postCode" type="VARCHAR(5)"/>
+            <column name="state" type="VARCHAR(50)"/>
+            <column defaultValueComputed="NULL" name="idUser" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-4">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="address_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-5">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="audit">
+            <column name="idAudit" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="action" type="VARCHAR(100)"/>
+            <column defaultValueComputed="NULL" name="date" type="datetime"/>
+            <column name="targetUser" type="VARCHAR(50)"/>
+            <column name="userIp" type="VARCHAR(45)"/>
+            <column name="userType" type="VARCHAR(50)"/>
+            <column name="username" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-6">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="audit_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-7">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="basket">
+            <column name="idBasket" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="active" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="actualBudgetAmount" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="basketLockedByUser" type="INT"/>
+            <column name="basketName" type="VARCHAR(50)"/>
+            <column defaultValueComputed="NULL" name="dateAccountLocked" type="datetime"/>
+            <column defaultValueComputed="NULL" name="dateBasketRegistered" type="datetime"/>
+            <column defaultValueComputed="NULL" name="estimatedBudgetAmount" type="DECIMAL(19, 2)"/>
+            <column name="locked" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="idUser" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-8">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="basket_item_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-9">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="basket_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-10">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="basketitem">
+            <column name="idBasketItem" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="basketStatus" type="INT"/>
+            <column defaultValueComputed="NULL" name="dateProductAdded" type="datetime"/>
+            <column defaultValueComputed="NULL" name="idProduct" type="INT"/>
+            <column name="isActive" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="quantity" type="INT"/>
+            <column defaultValueComputed="NULL" name="idBasket" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-11">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="brand">
+            <column name="idBrand" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="code" type="VARCHAR(10)"/>
+            <column name="description" type="VARCHAR(100)"/>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-12">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="brand_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-13">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="business">
+            <column name="idBusiness" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="businessCategory" type="INT"/>
+            <column defaultValueComputed="NULL" name="businessCreatedBy" type="INT"/>
+            <column name="businessLogoUrl" type="VARCHAR(200)"/>
+            <column defaultValueComputed="NULL" name="businessPercentageDiscount" type="DECIMAL(19, 2)"/>
+            <column name="businessQRCode" type="VARCHAR(100)"/>
+            <column name="businessRegistrationNumber" type="VARCHAR(50)"/>
+            <column defaultValueComputed="NULL" name="businessStatus" type="INT"/>
+            <column defaultValueComputed="NULL" name="dateBusinessCreated" type="datetime"/>
+            <column name="partOfSvbNetwork" type="VARCHAR(255)"/>
+            <column name="registeredName" type="VARCHAR(100)"/>
+            <column name="sponsored" type="VARCHAR(255)"/>
+            <column name="verified" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="idAccount" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-14">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="business_address_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-15">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="business_rating_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-16">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="business_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-17">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="businessaddress">
+            <column name="idBusinessAddress" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="address1" type="VARCHAR(150)"/>
+            <column name="address2" type="VARCHAR(150)"/>
+            <column name="address3" type="VARCHAR(150)"/>
+            <column name="apartment" type="VARCHAR(50)"/>
+            <column name="building" type="VARCHAR(50)"/>
+            <column name="city" type="VARCHAR(50)"/>
+            <column name="country" type="VARCHAR(30)"/>
+            <column name="district" type="VARCHAR(50)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="facebookPage" type="VARCHAR(150)"/>
+            <column name="fax" type="VARCHAR(20)"/>
+            <column name="homePage" type="VARCHAR(150)"/>
+            <column name="latitude" type="VARCHAR(10)"/>
+            <column name="longitude" type="VARCHAR(10)"/>
+            <column name="openingHours" type="VARCHAR(200)"/>
+            <column name="phoneNumber" type="VARCHAR(20)"/>
+            <column name="postCode" type="VARCHAR(5)"/>
+            <column defaultValueComputed="NULL" name="radius" type="INT"/>
+            <column name="street" type="VARCHAR(50)"/>
+            <column defaultValueComputed="NULL" name="idBusiness" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-18">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="businessrating">
+            <column name="idBusinessRating" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="qualityofService" type="INT"/>
+            <column name="ratingComment" type="VARCHAR(200)"/>
+            <column defaultValueComputed="NULL" name="idBusiness" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-19">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="campaign">
+            <column name="idCampaign" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="active" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="campaignDuration" type="BIGINT"/>
+            <column defaultValueComputed="NULL" name="campaignEndDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="campaignStartDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="campaignType" type="INT"/>
+            <column name="campaignUid" type="VARCHAR(150)"/>
+            <column defaultValueComputed="NULL" name="dateCampaignModified" type="datetime"/>
+            <column name="description" type="VARCHAR(250)"/>
+            <column name="goalDescription" type="VARCHAR(150)"/>
+            <column defaultValueComputed="NULL" name="idPurchase" type="INT"/>
+            <column name="shutdown" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="sponsoredProduct" type="INT"/>
+            <column name="valueProposition" type="VARCHAR(250)"/>
+            <column defaultValueComputed="NULL" name="idAccount" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-20">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="campaign_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-21">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="circle">
+            <column name="idCircle" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="friend1" type="INT"/>
+            <column defaultValueComputed="NULL" name="friend2" type="INT"/>
+            <column defaultValueComputed="NULL" name="status" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-22">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="circle_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-23">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="credit">
+            <column name="idCredit" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="contributionType" type="INT"/>
+            <column defaultValueComputed="NULL" name="creditType" type="INT"/>
+            <column defaultValueComputed="NULL" name="points" type="DECIMAL(19, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-24">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="credit_contribution_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-25">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="credit_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-26">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="creditcontribution">
+            <column name="idCreditContribution" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="contributionType" type="INT"/>
+            <column defaultValueComputed="NULL" name="creditAddedForUser" type="INT"/>
+            <column defaultValueComputed="NULL" name="creditContributionStatus" type="INT"/>
+            <column name="creditDetails" type="VARCHAR(100)"/>
+            <column defaultValueComputed="NULL" name="creditGranted" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="numberOfContributions" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-27">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="device_profile_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-28">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="deviceprofile">
+            <column name="idDeviceProfile" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="deviceId" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="deviceType" type="VARCHAR(255)"/>
+            <column name="fcmIdentifier" type="VARCHAR(200)"/>
+            <column defaultValueBoolean="false" name="isRefreshActive" type="BIT"/>
+            <column name="lastLocationDetected" type="VARCHAR(50)"/>
+            <column defaultValueComputed="NULL" name="lastTimeDeviceDetected" type="datetime"/>
+            <column name="mobileIPLocation" type="VARCHAR(250)"/>
+            <column name="mobileOS" type="VARCHAR(50)"/>
+            <column name="mobileQRCode" type="VARCHAR(250)"/>
+            <column name="notificationToken" type="VARCHAR(255)"/>
+            <column name="phoneNumber" type="VARCHAR(10)"/>
+            <column defaultValueComputed="NULL" name="idToken" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-29">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="follower">
+            <column name="idFollower" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="followStatus" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="userFollowing" type="INT"/>
+            <column defaultValueComputed="NULL" name="idBusiness" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-30">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="follower_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-31">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="impression">
+            <column name="idImpression" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="impressionType" type="INT"/>
+            <column defaultValueComputed="NULL" name="idProduct" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-32">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="impression_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-33">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="lottery_raffle_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-34">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="lotteryraffle">
+            <column name="idLotteryRaffle" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="endLotteryDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="frequency" type="INT"/>
+            <column defaultValueComputed="NULL" name="rollOverLotteryDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="runLotteryDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="startLotteryDate" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-35">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="newsletter">
+            <column name="idNewsletter" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="dateNewsletterRegistered" type="datetime"/>
+            <column name="email" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-36">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="newsletter_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-37">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="plan">
+            <column name="idPlan" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="numberOfBasketComparisonsAllowed" type="INT"/>
+            <column defaultValueComputed="NULL" name="numberOfBasketsAllowed" type="INT"/>
+            <column defaultValueComputed="NULL" name="numberOfCreditsAllowed" type="INT"/>
+            <column defaultValueComputed="NULL" name="numberOfItemsPerBasketAllowed" type="INT"/>
+            <column name="planDescription" type="VARCHAR(100)"/>
+            <column name="planName" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="pricePerMonth" type="DECIMAL(19, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-38">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="plan_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-39">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="price">
+            <column name="idPrice" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="currencyCode" type="VARCHAR(3)"/>
+            <column defaultValueComputed="NULL" name="datePriceTimeAdded" type="datetime"/>
+            <column defaultValueComputed="NULL" name="datePriceTimeNoted" type="datetime"/>
+            <column defaultValueComputed="NULL" name="endPriceDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="price" type="DECIMAL(19, 2)"/>
+            <column name="promoPrice" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="score" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="startPriceDate" type="datetime"/>
+            <column name="vatIncluded" type="VARCHAR(255)"/>
+            <column name="idProduct" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-40">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="price_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-41">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="privacy_info_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-42">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="privacyinformation">
+            <column name="idPrivacyInformation" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="acceptAlertNotification" type="VARCHAR(255)"/>
+            <column name="acceptMailAdverts" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="allowNotificationSchedule" type="INT"/>
+            <column name="allowNotifications" type="VARCHAR(255)"/>
+            <column name="muteAllNotifications" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-43">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="privilege">
+            <column name="idPrivilege" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-44">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="privilege_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-45">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="product">
+            <column name="idProduct" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="dateProductAdded" type="datetime"/>
+            <column defaultValueComputed="NULL" name="dateProductApproved" type="datetime"/>
+            <column name="duplicate" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="productInStock" type="INT"/>
+            <column name="productKey" type="VARCHAR(260)"/>
+            <column defaultValueComputed="NULL" name="productStatus" type="INT"/>
+            <column name="productStatusComment" type="VARCHAR(200)"/>
+            <column name="skuIdentifier" type="VARCHAR(100)"/>
+            <column name="sponsored" type="VARCHAR(255)"/>
+            <column name="idBusiness" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="NULL" name="idProductDiscountPackage" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-46">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="product_attribute_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-47">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="product_disc_package_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-48">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="product_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-49">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="product_sub_type_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-50">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="product_type_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-51">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="productattribute">
+            <column name="idProductAttribute" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="productMapKey" type="VARCHAR(50)"/>
+            <column name="productMapValue" type="VARCHAR(250)"/>
+            <column name="idProduct" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-52">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="productdiscountpackage">
+            <column name="idProductDiscountPackage" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="productMonetaryDiscount" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="productPercentageDiscount" type="DECIMAL(19, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-53">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="productsubtype">
+            <column name="idProductSubType" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="code" type="VARCHAR(5)"/>
+            <column name="description" type="VARCHAR(20)"/>
+            <column defaultValueComputed="NULL" name="idProductType" type="INT"/>
+            <column name="name" type="VARCHAR(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-54">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="producttype">
+            <column name="idProductType" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="code" type="VARCHAR(5)"/>
+            <column name="description" type="VARCHAR(2000)"/>
+            <column name="name" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-55">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="purchase">
+            <column name="idPurchase" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="billAmount" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="datePurchaseClosed" type="datetime"/>
+            <column defaultValueComputed="NULL" name="datePurchaseEffected" type="datetime"/>
+            <column name="paymentStatus" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="paymentType" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-56">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="purchase_history_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-57">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="purchase_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-58">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="purchasehistory">
+            <column name="idPurchaseHistory" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="buying" type="INT"/>
+            <column defaultValueComputed="NULL" name="dayProductPurchased" type="INT"/>
+            <column defaultValueComputed="NULL" name="idProduct" type="INT"/>
+            <column defaultValueComputed="NULL" name="purchasedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="weekProductPurchased" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-59">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="refresh_token_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-60">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="refreshtoken">
+            <column name="idToken" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="expiryDate" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="NULL" name="refreshCount" type="BIGINT"/>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-61">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="reward">
+            <column name="DTYPE" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="idReward" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="dateRewardRedeemed" type="datetime"/>
+            <column defaultValueComputed="NULL" name="endRewardDate" type="datetime"/>
+            <column name="rewardName" type="VARCHAR(255)"/>
+            <column name="rewardRedeemed" type="VARCHAR(255)"/>
+            <column name="rewardRedeemedByUser" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="startRewardDate" type="datetime"/>
+            <column name="giftDetails" type="VARCHAR(255)"/>
+            <column name="giftPictureUrl" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="idLotteryRaffle" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-62">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="reward_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-63">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="role">
+            <column name="idRole" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-64">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="role_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-65">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="roleprivilege">
+            <column name="idRole" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="idPrivilege" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-66">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="subscription">
+            <column name="idSubscription" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="dateSubscriptionEnd" type="datetime"/>
+            <column defaultValueComputed="NULL" name="dateSubscriptionPurchased" type="datetime"/>
+            <column defaultValueComputed="NULL" name="dateSubscriptionStart" type="datetime"/>
+            <column defaultValueComputed="NULL" name="idAccount" type="BIGINT"/>
+            <column defaultValueComputed="NULL" name="idPlan" type="INT"/>
+            <column defaultValueComputed="NULL" name="idPurchase" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-67">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="subscription_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-68">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="system_setting_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-69">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="systemsetting">
+            <column name="idSystemSetting" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="dateSettingCreated" type="datetime"/>
+            <column name="settingByUser" type="VARCHAR(100)"/>
+            <column name="systemKey" type="VARCHAR(250)"/>
+            <column name="systemValue" type="VARCHAR(250)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-70">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="user">
+            <column name="idUser" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="country" type="VARCHAR(20)"/>
+            <column defaultValueComputed="NULL" name="dateOfBirth" type="date"/>
+            <column defaultValueComputed="NULL" name="dateUserRegistered" type="datetime"/>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(1)"/>
+            <column name="homePhoneNumber" type="VARCHAR(20)"/>
+            <column name="language" type="VARCHAR(3)"/>
+            <column defaultValueComputed="NULL" name="lastTimeLogged" type="datetime"/>
+            <column name="mobilePhoneNumber" type="VARCHAR(20)"/>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="referrerCode" type="VARCHAR(150)"/>
+            <column defaultValueComputed="NULL" name="userBadge" type="INT"/>
+            <column name="userProfilePictureUrl" type="VARCHAR(200)"/>
+            <column name="userReferalCode" type="VARCHAR(150)"/>
+            <column name="username" type="VARCHAR(200)"/>
+            <column name="verified" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="idAccount" type="BIGINT"/>
+            <column defaultValueComputed="NULL" name="idDeviceProfile" type="INT"/>
+            <column defaultValueComputed="NULL" name="idLotteryRaffle" type="INT"/>
+            <column defaultValueComputed="NULL" name="idPrivacyInformation" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-71">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="user_contrib_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-72">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="user_loc_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-73">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="user_price_action_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-74">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="user_prod_action_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-75">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="user_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-76">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="usercontribution">
+            <column name="idUserContribution" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="artifactUrl" type="VARCHAR(200)"/>
+            <column defaultValueComputed="NULL" name="contributedByUserId" type="INT"/>
+            <column name="contributionStatus" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="contributionType" type="INT"/>
+            <column defaultValueComputed="NULL" name="creditsGained" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="dateContributionAdded" type="datetime"/>
+            <column defaultValueComputed="NULL" name="linkedBusinessId" type="INT"/>
+            <column defaultValueComputed="NULL" name="updatedDateContributionStatus" type="datetime"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-77">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="userlocation">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="country" type="VARCHAR(20)"/>
+            <column name="enabled" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="idUser" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-78">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="userpriceaction">
+            <column name="idUserPriceAction" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="confirmed" type="VARCHAR(255)"/>
+            <column name="dissaproved" type="VARCHAR(255)"/>
+            <column name="userActionComment" type="VARCHAR(100)"/>
+            <column defaultValueComputed="NULL" name="idPrice" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-79">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="userproductaction">
+            <column name="idUserProductAction" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="userProductComment" type="VARCHAR(100)"/>
+            <column defaultValueComputed="NULL" name="idProduct" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-80">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="userrole">
+            <column name="idUser" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="idRole" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-81">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="verification_token_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-82">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="verificationtoken">
+            <column name="idVerificationToken" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="expiryDate" type="datetime"/>
+            <column name="token" type="VARCHAR(255)"/>
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-83">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="voucher">
+            <column name="idVoucher" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="amountCredits" type="DECIMAL(19, 2)"/>
+            <column defaultValueComputed="NULL" name="businessVoucherConsumedAt" type="INT"/>
+            <column name="consumeDetails" type="VARCHAR(180)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="NULL" name="dateVoucherRedeemed" type="datetime"/>
+            <column defaultValueComputed="NULL" name="expiryDate" type="datetime"/>
+            <column name="voucherNumber" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="NULL" name="voucherStatus" type="INT"/>
+            <column defaultValueComputed="NULL" name="idReward" type="INT"/>
+            <column defaultValueComputed="NULL" name="idUser" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-84">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="voucher_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-85">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="watcher">
+            <column name="idWatcher" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="isActive" type="VARCHAR(255)"/>
+            <column defaultValueComputed="NULL" name="watchCreatedByUser" type="INT"/>
+            <column defaultValueComputed="NULL" name="watchDateCreated" type="datetime"/>
+            <column defaultValueComputed="NULL" name="watchNotificationStatus" type="INT"/>
+            <column defaultValueComputed="NULL" name="idProduct" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-86">
+        <validCheckSum>ANY</validCheckSum><createTable tableName="watcher_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-87">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK1u8yvem9nvbx8qo0hg1vlie6r" tableName="product">
+            <column name="idBusiness"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-88">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK6buwghegsu32y0i8cck1tag97" tableName="user">
+            <column defaultValueComputed="NULL" name="idAccount"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-89">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK6bxtyq7npeqjjblli65xe7hys" tableName="userrole">
+            <column name="idUser"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-90">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK6qtftk1d7q7dq39xysmch1f22" tableName="basketitem">
+            <column defaultValueComputed="NULL" name="idBasket"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-91">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK96bt6tnoxolemjt1i82hmw6ji" tableName="product">
+            <column defaultValueComputed="NULL" name="idProductDiscountPackage"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-92">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK9ud0pyd0i6wgwl8pirb7exh0w" tableName="roleprivilege">
+            <column name="idPrivilege"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-93">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FK_VERIFY_USER" tableName="verificationtoken">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-94">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKa0b110d1usbke9rpqem546bhw" tableName="follower">
+            <column defaultValueComputed="NULL" name="idBusiness"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-95">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKc56c0o32dx5hosrb2q7oyftlj" tableName="user">
+            <column defaultValueComputed="NULL" name="idLotteryRaffle"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-96">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKch841da2b3mbc28t2qdxsicmc" tableName="price">
+            <column name="idProduct"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-97">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKd3dtjuspjvwv50xk8aus1puqh" tableName="reward">
+            <column defaultValueComputed="NULL" name="idLotteryRaffle"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-98">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKdi2h1ysg6tj2b0ojm8a5otysw" tableName="subscription">
+            <column defaultValueComputed="NULL" name="idPlan"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-99">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKe9yyqrxhl3nqotofb0u8mpt4o" tableName="user">
+            <column defaultValueComputed="NULL" name="idDeviceProfile"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-100">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKgj7fbmcq7581q4w7vqwilwcx4" tableName="businessrating">
+            <column defaultValueComputed="NULL" name="idBusiness"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-101">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKhoevp0qmh9m92yc122fyksbig" tableName="roleprivilege">
+            <column name="idRole"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-102">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKi2n7rxtyudtb3n0ce7gt0iuww" tableName="watcher">
+            <column defaultValueComputed="NULL" name="idProduct"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-103">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKid9f11wj5jo6or2et35pngmm5" tableName="business">
+            <column defaultValueComputed="NULL" name="idAccount"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-104">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKj6tind5ol22bsmk2qwu6pdwff" tableName="subscription">
+            <column defaultValueComputed="NULL" name="idAccount"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-105">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKk66pf6iqkchc1yrg2nb58flf5" tableName="basket">
+            <column defaultValueComputed="NULL" name="idUser"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-106">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKkism033ony6kukxakobcjkv78" tableName="address">
+            <column defaultValueComputed="NULL" name="idUser"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-107">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKkvfblneevk4wdfa0wwmsc8168" tableName="campaign">
+            <column defaultValueComputed="NULL" name="idAccount"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-108">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKlphlyo4xrwld3dbc6ixvoxbo9" tableName="user">
+            <column defaultValueComputed="NULL" name="idPrivacyInformation"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-109">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKlrc4tu4dck5681rxeo6eigu9x" tableName="userpriceaction">
+            <column defaultValueComputed="NULL" name="idPrice"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-110">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKnpssw7972s0c02q4ja2pwceuy" tableName="deviceprofile">
+            <column defaultValueComputed="NULL" name="idToken"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-111">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKnw0rybk2tuldo1u3chkq0ps8p" tableName="userlocation">
+            <column name="idUser"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-112">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKo3d08fec0usr7fhd44ttoakid" tableName="businessaddress">
+            <column defaultValueComputed="NULL" name="idBusiness"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-113">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKpjcmuh6yppgev5yxon122yv5d" tableName="impression">
+            <column defaultValueComputed="NULL" name="idProduct"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-114">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKpypsx831xtlpfc8hygx2ahl1g" tableName="userproductaction">
+            <column defaultValueComputed="NULL" name="idProduct"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-115">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKrnqoyjm5w5gkev53wpvetakui" tableName="voucher">
+            <column defaultValueComputed="NULL" name="idReward"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-116">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKs35jmpxiboc7qjwj7xj61f4s7" tableName="subscription">
+            <column defaultValueComputed="NULL" name="idPurchase"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-117">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKsho2sceh4c3tfejvwlrh7fs9b" tableName="voucher">
+            <column defaultValueComputed="NULL" name="idUser"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-118">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKsuteoxjw5hm3emwjds8lgb5u7" tableName="userrole">
+            <column name="idRole"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-119">
+        <validCheckSum>ANY</validCheckSum><createIndex indexName="FKt7em2r5heicby6af9xgqkrmc4" tableName="productattribute">
+            <column name="idProduct"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)"
+		id="1631454758168-120">
+		<validCheckSum>ANY</validCheckSum>
+		<insert tableName="systemsetting">
+			<column name="idSystemSetting" value="1" />
+			<column name="systemKey" value="ADMIN_INITIALIZE_FLAG" />
+			<column name="systemValue" value="0" />
+		</insert>
+		<rollback />
+	</changeSet>
+	<changeSet author="Javed.Neemuth (generated)"
+		id="1631454758168-121">
+		<validCheckSum>ANY</validCheckSum>
+		<insert tableName="systemsetting">
+			<column name="idSystemSetting" value="2" />
+			<column name="systemKey"
+				value="LOTTERY_DRAW_PARTICIPATION_LIMIT" />
+			<column name="systemValue" value="-100" />
+		</insert>
+		<rollback />
+	</changeSet>
+	<changeSet author="Javed.Neemuth (generated)"
+		id="1631454758168-122">
+		<validCheckSum>ANY</validCheckSum>
+		<insert tableName="systemsetting">
+			<column name="idSystemSetting" value="3" />
+			<column name="systemKey"
+				value="RUN_INITIAL_SEQUENCE_LOAD" />
+			<column name="systemValue" value="0" />
+		</insert>
+		<rollback />
+	</changeSet>
+	<changeSet author="Javed.Neemuth (generated)" id="1631454758168-123">
+        <modifyDataType columnName="isRefreshActive" newDataType="varchar(3)" tableName="deviceprofile"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1631454758168-124">
+        <addDefaultValue columnDataType="varchar(3)" columnName="isRefreshActive" defaultValue="Y" tableName="deviceprofile"/>
+    </changeSet>    
+    <changeSet author="Javed.Neemuth (generated)"
+		id="1631454758168-125">
+		<validCheckSum>ANY</validCheckSum>
+		<insert tableName="systemsetting">
+			<column name="idSystemSetting" value="4" />
+			<column name="systemKey"
+				value="ENABLE_REWARD_FEATURE" />
+			<column name="systemValue" value="0" />
+		</insert>
+		<rollback />
+	</changeSet>
+</databaseChangeLog>

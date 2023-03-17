@@ -1,0 +1,2742 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="no-js"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>SaversBasket | A Platform for CrowdSourced Grocery Prices</title>
+<meta name="description" content="">
+<meta http-equiv="Content-Security-Policy"
+	content="upgrade-insecure-requests">
+<!-- Favicon -->
+<link rel="shortcut icon" href="images/favicon.ico" />
+<!-- Library / Plugin Css Build -->
+<link rel="stylesheet" href="css/libs.min.css">
+<!-- fontawsome Css Build -->
+<link rel="stylesheet"
+	href="vendor/@fortawesome/fontawesome-free/css/all.min.css">
+<!-- Insites CSS for pop-up cookie message -->
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+<!-- Custom Css -->
+<link rel="stylesheet" href="css/foodsto.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	/** app properties */
+	var globalProductCategory = '0';
+	function PaginationSearchRequest() {
+		var searchValue = "";
+		var globalProductCategory = "";
+		var pageNumber = 1;
+
+		this.searchValue = function(searchVal) {
+			this.searchValue = searchVal;
+		}
+
+		this.globalProductCategory = function(globalProductCategoryVal) {
+			this.globalProductCategory = globalProductCategoryVal;
+		}
+
+		this.pageNumber = function(pageNumberVal) {
+			this.pageNumber = pageNumberVal;
+		}
+	}
+
+	$(document)
+			.ready(
+					function() {					
+						
+
+						productTypeAjaxForWishlist();
+
+						/** Price Format */
+						$('#price').priceFormat({
+							prefix : 'MUR',
+							centsSeparator : '.',
+							thousandsSeparator : '',
+							clearPrefix : true,
+							clearSuffix : true
+						});
+
+						//get contribution price	
+						$('#priceDialogForm')
+								.on(
+										'show.bs.modal',
+										function(event) {
+											$('#price').val('0');
+											encryptedProductKey = $(
+													event.relatedTarget).data(
+													'product-key');
+										});
+
+						$('#searchProductBtn')
+								.on(
+										'click',
+										function() {
+											var searchValue = $(
+													'#searchingValue').val();
+											var pageNumber = 0;
+
+											var paginationSearchRequest = new PaginationSearchRequest();
+											paginationSearchRequest.searchValue = searchValue;
+											paginationSearchRequest.pageNumber = pageNumber;
+											paginationSearchRequest.globalProductCategory = globalProductCategory;
+
+											//Disable textbox to prevent multiple submit
+											$(this)
+													.attr("disabled",
+															"disabled");
+
+											//search products
+											searchProducts(paginationSearchRequest);
+
+											//Enable the textbox again if needed.
+											$(this).removeAttr("disabled");
+										});
+
+						//added on key press.
+						$('#searchingValue').on('keypress', function(e) {
+							if (e.which === 13) {
+								//Disable textbox to prevent multiple submit
+								$(this).attr("disabled", "disabled");
+
+								//Do Stuff, submit, etc..
+								$('#pills-breakfast-cereals .row').empty();
+								pageNumber = 0;
+								paginatedSearchProducts(pageNumber);
+
+								//Enable the textbox again if needed.
+								$(this).removeAttr("disabled");
+							}
+						});
+					});
+
+	function getFilteringValue(idProductType) {
+		globalProductCategory = idProductType;
+	}
+
+	/** contribute price to system */
+	function contributePriceViaSearchResult() {
+
+		var contributedPrice = $("#price").val();
+
+		var formData = new FormData();
+		formData.append("encryptedProductKey", encryptedProductKey);
+		formData.append("contributedPrice", contributedPrice);
+
+		$
+				.post({
+					url : 'api/v1/basket/contributePrice',
+					data : formData,
+					enctype : 'multipart/form-data',
+					processData : false,
+					contentType : false,
+					cache : false,
+					async : false,
+					beforeSend : function() {
+
+					},
+					success : function(res) {
+						if (res.validated) {
+							toastr
+									.info('You have successfully contributed price.');
+							if (res.creditedReward != null) {
+								toastr
+										.info('Congratulations.'
+												+ res.creditedReward
+												+ ' credits have been deposited to your account!');
+							}
+						} else {
+							toastr.error('Please recheck missing fields!');
+						}
+					},
+					complete : function(data) {
+					},
+					error : function(e) {
+					}
+				});
+	}
+
+	function productTypeAjaxForWishlist() {
+		$.ajax({
+			url : "api/v1/basket/getAllProductTypes",
+			type : "post",
+			success : function(response) {
+				$('#idProductType').empty();
+				$('#idProductType').append($('<option>', {
+					value : 0,
+					text : 'Select Product Category'
+				}));
+
+				$.each(response, function(index, value) {
+					$('#idProductType').append($('<option>', {
+						value : value.code,
+						text : value.name
+					}));
+				});
+			},
+			error : function(e) {
+			}
+		});
+	}
+
+	function paginatedSearchProducts(pageNumber) {
+
+		$('#pills-breakfast-cereals .row').empty();
+		var paginationSearchRequest = new PaginationSearchRequest();
+
+		paginationSearchRequest.searchValue = $('#prodSearchKeywords').val();
+		paginationSearchRequest.pageNumber = pageNumber;
+		paginationSearchRequest.globalProductCategory = globalProductCategory;
+
+		searchProducts(paginationSearchRequest);
+	};
+	
+	function addProduct(element,idProduct,quantity){	
+		
+		$
+		.ajax({
+			type : "post",
+			url : "api/v1/basket/addProductToUserBasket",
+			cache : false,
+			data : 'idProduct='+ idProduct +'&quantity=0',		
+			success : function(response) {		
+				
+						const swalWithBootstrapButtons = Swal.mixin({
+					        customClass: {
+					            confirmButton: 'btn btn-primary ms-3 text-white fw-bold h6',
+					            cancelButton: 'btn btn-secondary text-white fw-bold h6'
+					        },
+					        buttonsStyling: false
+					    });
+			
+		              swalWithBootstrapButtons.fire({
+				            title: 'Added to basket!',
+				            text: "",
+				            icon: 'success',
+				            showCancelButton: true,
+				            confirmButtonText: 'Continue shopping',
+				            cancelButtonText: 'Go to Basket',
+				            reverseButtons: true
+				        }).then((result) => {
+				            if (result.isConfirmed) {
+				                btn.querySelector('.btn').innerHTML = 'View Basket <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>'
+				                return true
+				            } else if (
+				                /* Read more about handling dismissals below */
+				                result.dismiss === Swal.DismissReason.cancel
+				            ) {
+				                window.location.replace('../basket.html')
+				            }
+				        });
+		            
+						 
+			},
+			error : function() {
+			}
+		});
+	};
+
+	function searchProducts(paginationSearchRequest) {
+
+		$
+				.ajax({
+					type : "post",
+					url : "api/v1/basket/findProducts",
+					cache : false,
+					data : 'searchValue=' + paginationSearchRequest.searchValue
+							+ '&globalProductCategory='
+							+ paginationSearchRequest.globalProductCategory
+							+ '&pageNumber='
+							+ paginationSearchRequest.pageNumber,
+					beforeSend : function() {
+					},
+					success : function(response) {
+
+						if (response.products.length < response.maxTotalElementsPerPage
+								&& response.numberOfPages <= 0) {
+							$("#paginationBar").hide();
+
+						} else {
+							//clear all list items
+							$("#paginationTable ul").empty();
+
+							/**
+							 * redraw pagination
+							 */
+							for (index = 0; index < response.numberOfPages; ++index) {
+
+								paginationSearchRequest.pageNumber = index;
+								$("#paginationTable ul")
+										.append(
+												'<li><span class="paginatedResultBagde"><a onclick="paginatedSearchProducts('
+														+ paginationSearchRequest.pageNumber
+														+ ')">' + index
+														+ '</span></a></li>');
+							}
+						}
+
+						if (response.products <= 0) {
+
+							Swal
+								.fire({
+									icon : 'info',
+									title : 'Oops...',
+									text : 'No Product Found!',
+									footer : '<span class="search-product-footer"> Help others by <u><a href="/newProduct?barcode=NA"> adding </a></u> this product? </span>'
+								});
+
+						} else {
+
+							$
+							.each(
+									response.products,
+									function(index, value) {
+										
+										var addBasketButtonState = "";
+										if (!value.addedToBasket){
+											addBasketButtonState = '</b></span></h6><i class="fas fa-calendar-alt" aria-hidden="true"></i><span class="datePriceNoted"> '+ moment(value.datePriceNoted).format('DD/MM/YYYY')
+											+ '</span><div class="iq-ratings"><div class="d-flex align-items-center text-secondary list-inline p-0 m-0"><i class="fas fa-star fa-xs me-1"></i><i class="fas fa-star fa-xs me-1"></i><i class="fas fa-star fa-xs me-1"></i><i class="far fa-star fa-xs me-1"></i><i class="far fa-star fa-xs me-1"></i></div></div></div><div class="d-flex justify-content-between mb-3"><div class="iq-btn-container"><a class="" onclick="addProduct(this,'+ value.idProduct +',0)" data-alert="sweetalert-product"><div class="btn btn-secondary animation-btn">Add To Basket<i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i></div></a></div><div class="d-flex align-items-center"><div class="iq-product-icon"><a href="#priceDialogForm" title="contribute price by clicking on this link" class="item" data-toggle="modal" data-product-key="'+value.encryptedProductKey+'" data-target="#priceDialogForm"><i class="fas fa-tag"></i></a></div><div class="iq-product-icon ms-2"><a href="../viewProduct?pid=';
+										} else {
+											addBasketButtonState = '</b></span></h6><i class="fas fa-calendar-alt" aria-hidden="true"></i><span class="datePriceNoted"> '+ moment(value.datePriceNoted).format('DD/MM/YYYY')
+											+ '</span><div class="iq-ratings"><div class="d-flex align-items-center text-secondary list-inline p-0 m-0"><i class="fas fa-star fa-xs me-1"></i><i class="fas fa-star fa-xs me-1"></i><i class="fas fa-star fa-xs me-1"></i><i class="far fa-star fa-xs me-1"></i><i class="far fa-star fa-xs me-1"></i></div></div></div><div class="d-flex justify-content-between mb-3"><div class="iq-btn-container"><a class="" data-alert="sweetalert-product"><div class="btn btn-inactive">Already in Basket</div></a></div><div class="d-flex align-items-center"><div class="iq-product-icon"><a href="#priceDialogForm" title="contribute price by clicking on this link" class="item" data-toggle="modal" data-product-key="'+value.encryptedProductKey+'" data-target="#priceDialogForm"><i class="fas fa-tag"></i></a></div><div class="iq-product-icon ms-2"><a href="../viewProduct?pid=';
+										}	
+										
+										
+										// check whether to display tag price
+										var showSalesTag = '';
+										if (value.percentageDifferencePrice < 0) {
+											showSalesTag = '<span class="wdp-ribbon wdp-ribbon-five">' + value.percentageDifferencePrice + '%</span>';
+										}
+										
+										$(
+										'#pills-breakfast-cereals .row')
+										.append(
+												'<div class="col"><div class="card card-product"><div class="card-header"><i class="fas fa-store-alt" style="font-size:24px;color:red"></i>   <span class="businessNameFormat">'
+														+ value.businessName
+														+ '</span></div><div class="card-body"><div class="iq-product-image"><img src="' + value.imageUrl + '" class="hover_image" alt="img"></div><div class="iq-product-content mt-3">'+ showSalesTag+'<p class="mb-0"><small>'
+														+ value.productDescription
+														+ '</small></p><a href="../viewProduct?pid='
+														+ value.encryptedProductKey
+														+ '" class="iq-product-title-link h5">'
+														+ value.productDescription
+														+ '</a><div class="d-flex align-items-center justify-content-between my-2"><h6 class="m-0"><span class="text-decoration-line-through"></span><span class="text-primary"><b>MUR'
+														+ value.updatedprice.toFixed(2).toString()														
+														+ addBasketButtonState
+														+ value.encryptedProductKey
+														+ '"><i class=" fa fa-eye"></i></a></div></div></div></div></div></div></div>');
+									});
+						}
+					},
+					complete : function(data) {
+					},
+					error : function() {
+					}
+				});
+	}
+</script>
+</head>
+
+<body class="  ">
+	<span class="screen-darken"></span>
+	<!-- loader Start -->
+	<div id="loading">
+		<div class="loader simple-loader">
+			<div class="loader-body"></div>
+		</div>
+	</div>
+	<!-- loader END -->
+	<main class="main-content">
+		<!--header area start-->
+		<div th:replace="page-template.html :: header"></div>
+		<!--header area end-->
+
+		<!-- Contribute Price -->
+		<div class="modal fade dialogbox show" id="priceDialogForm"
+			data-backdrop="static" tabindex="-1" role="dialog"
+			style="padding-right: 12px;" aria-modal="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Contribute Price</h5>
+					</div>
+					<form>
+						<div class="modal-body text-left mb-2">
+
+							<div class="form-group basic">
+								<div class="input-wrapper">
+									<label class="label" for="price">Enter Amount</label> <input
+										type="text" class="form-control" id="price" name="price"
+										value="0"> <i class="clear-input"> <ion-icon
+											name="close-circle" role="img" class="md hydrated"
+											aria-label="close circle"></ion-icon>
+									</i>
+								</div>
+							</div>
+
+						</div>
+						<div class="modal-footer">
+							<div class="btn-inline">
+								<button type="button" class="btn btn-text-secondary"
+									data-dismiss="modal">CANCEL</button>
+								<button type="button" class="btn btn-text-primary"
+									data-dismiss="modal"
+									onclick="contributePriceViaSearchResult();">CONTRIBUTE</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="iq-height" style="height: 89px;"></div>
+		<!--Nav End-->
+		<div class="banner section-padding-120 pb-0" id="home-1">
+			<div class="slider-image" id="banner-slider-image">
+				<div class="slider-2"></div>
+				<div class="slider-3"></div>
+				<div class="slider-4"></div>
+				<div class="slider-5"></div>
+				<div class="slider-6"></div>
+				<div class="slider-text">
+					<div class="scrolling-text vertical-scroll text-center">
+						<div>Savings</div>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 align-self-center mt-mb-0 mb-4">
+						<div class="hero-left">
+							<h2 id="banner-title">
+								Savers<span class="text-primary">Basket</span><br>
+							</h2>
+							<p id="banner-description">
+								<span class="platform-header-tagline">A Platform for
+									CrowdSourced Grocery Price Data</span>
+							</p>
+							<!-- div class="iq-btn-container" id="banner-action">
+								<a href="javascript:void(0)">
+									<div class="btn btn-secondary animation-btn">
+										View More <i aria-hidden="true"
+											class="fas fa-long-arrow-alt-right ms-2"></i>
+									</div>
+								</a>
+							</div-->
+						</div>
+					</div>
+					<div class="col-md-6" id="banner-image-bg"
+						style="background: url(images/banner/banner-2-shap.png) no-repeat scroll center center; background-size: contain;">
+						<img alt="img" src="images/banner/display-logo.png"
+							id="banner-image" class="img-fluid mx-auto d-block trolleylogo">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div
+				class=" iq-box-shadow rounded p-5 iq-grocery-card position-relative bg-white">
+				<div class="row p-0">
+					<div class="col-lg-6 col-md-6 col-xl-3 mb-xl-0 mb-4">
+						<div class="d-flex align-items-center">
+							<div class="services-icon-box-icon">
+								<span class=""> <svg class="svg-icon"
+										xmlns="http://www.w3.org/2000/svg"
+										xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+										width="2083px" height="2083px" viewBox="0 0 2083 2083"
+										xml:space="preserve">
+										<image id="image1" width="2083" height="2083" x="0" y="0"
+											xlink:href="images/category-product/icon.png"></image>
+									</svg>
+								</span>
+							</div>
+							<div class="services-icon-box-content ms-3">
+								<h5 class="services-icon-box-title text-primary mb-0">
+									Search</h5>
+								<p class="services-icon-box-description mb-0">Look-up for
+									market prices</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-xl-3 mb-xl-0 mb-4">
+						<div class="d-flex align-items-center">
+							<div class="services-icon-box-icon">
+								<span class=""> <svg class="svg-icon"
+										xmlns="http://www.w3.org/2000/svg"
+										xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+										width="2083px" height="2083px" viewBox="0 0 2083 2083"
+										xml:space="preserve">
+										<image id="image2" width="2083" height="2083" x="0" y="0"
+											xlink:href="images/category-product/demo2.png"></image>
+									</svg>
+								</span>
+							</div>
+							<div class="services-icon-box-content ms-3">
+								<h5 class="services-icon-box-title text-primary mb-0">
+									Information</h5>
+								<p class="services-icon-box-description mb-0">Know what you
+									are consuming</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-xl-3  mb-md-0 mb-4">
+						<div class="d-flex align-items-center">
+							<div class="services-icon-box-icon">
+								<span class=""> <svg class="svg-icon"
+										xmlns="http://www.w3.org/2000/svg"
+										xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+										width="2083px" height="2083px" viewBox="0 0 2083 2083"
+										xml:space="preserve">
+										<image id="image3" width="2083" height="2083" x="0" y="0"
+											xlink:href="images/category-product/demo3.png"></image>
+									</svg>
+								</span>
+							</div>
+							<div class="services-icon-box-content ms-3">
+								<h5 class="services-icon-box-title text-primary mb-0">Basket
+									Value</h5>
+								<p class="services-icon-box-description mb-0">Basket value
+									review your basket costing</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-6 col-xl-3  mb-md-0 mb-4">
+						<div class="d-flex align-items-center">
+							<div class="services-icon-box-icon">
+								<span class=""> <svg class="svg-icon"
+										xmlns="http://www.w3.org/2000/svg"
+										xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+										width="2083px" height="2083px" viewBox="0 0 2083 2083"
+										xml:space="preserve">
+										<image id="image4" width="2083" height="2083" x="0" y="0"
+											xlink:href="images/category-product/demo4.png"></image>
+									</svg>
+								</span>
+							</div>
+							<div class="services-icon-box-content ms-3">
+								<h5 class="services-icon-box-title text-primary mb-0">
+									Support</h5>
+								<p class="services-icon-box-description mb-0">Concerns and
+									queries</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- div
+			class="services-banner pb-0 section-padding-120 position-relative">
+			<img src="images/banner/banner-shap-2.png"
+				class="background-img background-img-4 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="banner2">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-4 position-relative">
+						<div class="services-container  iq-box-shadow"
+							data-iq-gsap="onStart" data-iq-position-x="-150"
+							data-iq-rotate="0" data-iq-trigger="scroll"
+							data-iq-ease="power.inOut">
+							<div
+								class="iq-product-offer-block overflow-hidden rounded position-relative">
+								<div class="iq-offer-img">
+									<div class="iq-offer-back-img"></div>
+								</div>
+								<div
+									class="iq-offer-info  overflow-hidden position-relative d-flex align-items-center p-4 align-content-center flex-wrap text-white w-100">
+									<span class="iq-offer-sub d-block text-primary w-100">Organically
+										Produce</span>
+									<h5 class="iq-offer-title d-block  w-100 mb-4">Vegetables</h5>
+									<a class="" href="javascript:void(0)">
+										<div class="btn btn-secondary animation-btn">
+											Shop Now <i aria-hidden="true"
+												class="fas fa-long-arrow-alt-right ms-2"></i>
+										</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 position-relative">
+						<div class="services-container  iq-box-shadow"
+							data-iq-gsap="onStart" data-iq-position-y="50" data-iq-rotate="0"
+							data-iq-trigger="scroll" data-iq-ease="power.inOut">
+							<div
+								class="iq-product-offer-block overflow-hidden rounded position-relative">
+								<div class="iq-offer-img">
+									<div class="iq-offer-back-img iq-offer-back-img-2"></div>
+								</div>
+								<div
+									class="iq-offer-info  overflow-hidden position-relative d-flex align-items-center p-4 align-content-center flex-wrap text-white w-100">
+									<span class="iq-offer-sub d-block text-primary w-100">Flat
+										30% off</span>
+									<h5 class="iq-offer-title d-block  w-100 mb-4">Fresh Foods</h5>
+									<div class="iq-btn-container d-block w-100">
+										<a class="" href="javascript:void(0)">
+											<div class="btn btn-secondary animation-btn">
+												Shop Now <i aria-hidden="true"
+													class="fas fa-long-arrow-alt-right ms-2"></i>
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4 position-relative">
+						<div class="services-container  iq-box-shadow"
+							data-iq-gsap="onStart" data-iq-position-x="150"
+							data-iq-rotate="0" data-iq-trigger="scroll"
+							data-iq-ease="power.inOut">
+							<div
+								class="iq-product-offer-block overflow-hidden rounded position-relative">
+								<div class="iq-offer-img">
+									<div class="iq-offer-back-img iq-offer-back-img-3"></div>
+								</div>
+								<div
+									class="iq-offer-info  overflow-hidden position-relative d-flex align-items-center p-4 align-content-center flex-wrap text-white w-100">
+									<span class="iq-offer-sub d-block text-primary w-100">Gluten-free</span>
+									<h5 class="iq-offer-title d-block  w-100 mb-4">Super
+										Salads</h5>
+									<div class="iq-btn-container d-block w-100">
+										<a class="" href="javascript:void(0)">
+											<div class="btn btn-secondary animation-btn">
+												Shop Now <i aria-hidden="true"
+													class="fas fa-long-arrow-alt-right ms-2"></i>
+											</div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div-->
+		<!-- Search Results -->
+		<div class="section-padding-120 position-relative">		
+			<div class="container">
+				<div class="scrolling-text text-center">
+					<div data-iq-gsap="onStart" data-iq-opacity="1"
+						data-iq-position-x="200" data-iq-trigger="scroll"
+						data-iq-scroll-scrub="true" data-iq-ease="power.inOut">
+						Search</div>
+				</div>
+				<div class="iq-title-box text-center">
+					<span class="iq-subtitle">What are you looking for today ?</span>
+					<h3 class="iq-title">Search Products</h3>
+					<!-- div class="iq-title-divider"></div-->
+					<div class="search_box">
+						<input placeholder="Search product..." type="text"
+							id="prodSearchKeywords" autocomplete="off"> </input>
+					</div>
+					<div class="category_box_special">
+						<i class="fa fa-tag"></i> <label>Category</label> <select
+							name="idProductType" id="idProductType">
+						</select>
+					</div>
+					<div class="iq-btn-container">
+						<a id="btnSearchProduct" class="">
+							<div class="btn btn-secondary animation-btn">
+								Search <i aria-hidden="true" class="fas fa-search ms-2"></i>
+							</div>
+						</a>
+					</div>
+
+				</div>
+				<div class="row">
+					<!-- div class="tabs-wrapper">
+						<ul class="nav nav-pills mb-3 justify-content-center"
+							id="pills-tab" role="tablist">
+							<li class="nav-item active" role="presentation"
+								style="margin-right: 15px;"><a class="nav-link active"
+								id="pills-breakfast-cereals-tab" data-bs-toggle="pill" href=""
+								data-bs-target="#pills-breakfast-cereals" role="tab"
+								aria-controls="pills-breakfast-cereals" aria-selected="true">All
+									Categories...</a></li>
+							<!-- li class="nav-item" role="presentation"
+								style="margin-right: 15px;"><a class="nav-link"
+								id="pills-fruit-yogurt-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-fruit-yogurt" href="" role="tab"
+								aria-controls="pills-fruit-yogurt" aria-selected="false">Fruit
+									Yogurt</a></li>
+							<li class="nav-item" role="presentation"
+								style="margin-right: 15px;"><a class="nav-link"
+								id="pills-salads-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-salads" href="" role="tab"
+								aria-controls="pills-salads" aria-selected="false">Salads</a></li-->
+					</ul>
+					</div-->
+					<div class="tab-content mt-3" id="pills-tabContent">
+						<div class="tab-pane fade show active"
+							id="pills-breakfast-cereals" role="tabpanel"
+							aria-labelledby="pills-breakfast-cereals">
+							<div
+								class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4">
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-fruit-yogurt" role="tabpanel"
+							aria-labelledby="pills-fruit-yogurt">
+							<div
+								class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4">
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/15.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Soups, Vegetables</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Cardamom</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$22</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-salads" role="tabpanel"
+							aria-labelledby="pills-salads">
+							<div
+								class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4">
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/04.png" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals, Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bolthouse</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$100</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="paginationTable">
+					<ul id="horizontal-list"></ul>
+				</div>
+			</div>
+		</div>
+		<!-- Search Results -->
+		<!-- div class="section-padding-120 position-relative">
+  <img  src="images/banner/shap-8.png" class="background-img background-img-5 img-fluid"
+    data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90" data-iq-ease="power.inOut" alt="shap-8">
+  <img src="images/banner/shap-10.png" class="background-img background-img-6 img-fluid"
+    data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90" data-iq-ease="power.inOut" alt="shap-10">
+			<div class="container">
+				<div class="scrolling-text text-center">
+					<div data-iq-gsap="onStart" data-iq-opacity="1"
+						data-iq-position-x="200" data-iq-trigger="scroll"
+						data-iq-scroll-scrub="true" data-iq-ease="power.inOut">
+						Products</div>
+				</div>
+				<div class="iq-title-box text-center">
+					<span class="iq-subtitle">Organically Produced</span>
+					<h3 class="iq-title">New Organic Add-ons</h3>
+					<div class="iq-title-divider"></div>
+				</div>
+				<div class="row">
+					<div class="tabs-wrapper">
+						<ul class="nav nav-pills mb-3 justify-content-center"
+							id="pills-tab" role="tablist">
+							<li class="nav-item active" role="presentation"
+								style="margin-right: 15px;"><a class="nav-link active"
+								id="pills-breakfast-cereals-tab" data-bs-toggle="pill" href=""
+								data-bs-target="#pills-breakfast-cereals" role="tab"
+								aria-controls="pills-breakfast-cereals" aria-selected="true">Breakfast
+									Cereals</a></li>
+							<li class="nav-item" role="presentation"
+								style="margin-right: 15px;"><a class="nav-link"
+								id="pills-fruit-yogurt-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-fruit-yogurt" href="" role="tab"
+								aria-controls="pills-fruit-yogurt" aria-selected="false">Fruit
+									Yogurt</a></li>
+							<li class="nav-item" role="presentation"
+								style="margin-right: 15px;"><a class="nav-link"
+								id="pills-salads-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-salads" href="" role="tab"
+								aria-controls="pills-salads" aria-selected="false">Salads</a></li>
+						</ul>
+					</div>
+					<div class="tab-content mt-3" id="pills-tabContent">
+						<div class="tab-pane fade show active"
+							id="pills-breakfast-cereals" role="tabpanel"
+							aria-labelledby="pills-breakfast-cereals">
+							<div
+								class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4">
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/04.png" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals, Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bolthouse</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$100</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/14.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Bakery, Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bread</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through">$1200</span> <span
+															class="text-primary"><b>$1000</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="iq-sold">
+											<span class="iq-sold-out">Sale!</span>
+										</div>
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/03.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bread Breakfast</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$7.50</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/13.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Salads, Soups</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Broccoli</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$15</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="iq-sold">
+											<span class="iq-sold-out">Sale!</span>
+										</div>
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/15.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Soups,Vegetables</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Cardamom</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$22</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/16.png" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Maggi</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Cheese maggi</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through">$20</span> <span
+															class="text-primary"><b>$10</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/05.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Bakery, Breakfast Cereals</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Green Machine</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through">$45</span> <span
+															class="text-primary"><b>$40</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="iq-sold">
+											<span class="iq-sold-out">Sale!</span>
+										</div>
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/01.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals,Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Chips</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$10</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="fas fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-fruit-yogurt" role="tabpanel"
+							aria-labelledby="pills-fruit-yogurt">
+							<div
+								class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4">
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/15.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Soups, Vegetables</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Cardamom</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$22</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/16.png" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>maggi</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Cheese maggi</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through">$20</span> <span
+															class="text-primary"><b>$10</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/05.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Bakery, Breakfast Cereals</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Green Machine</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through">$45</span> <span
+															class="text-primary"><b>$40</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/01.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals, Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Chips</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$10</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-salads" role="tabpanel"
+							aria-labelledby="pills-salads">
+							<div
+								class="row row-cols-1 row-cols-md-2 row-cols-xl-3 row-cols-xxl-4">
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/04.png" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals, Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bolthouse</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$100</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/14.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Bakery, Snacks</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bread</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through">$1200</span> <span
+															class="text-primary"><b>$1000</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/03.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Breakfast Cereals</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Bread Breakfast</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$7.50</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="card card-product">
+										<div class="card-body">
+											<div class="iq-product-image">
+												<img src="images/product/13.jpg" class="hover_image"
+													alt="img">
+											</div>
+											<div class="iq-product-content mt-3">
+												<p class="mb-0">
+													<small>Salads, Soups</small>
+												</p>
+												<a href="./product/new-product.html"
+													class="iq-product-title-link h5">Broccoli</a>
+												<div
+													class="d-flex align-items-center justify-content-between my-2">
+													<h6 class="m-0">
+														<span class="text-decoration-line-through"></span> <span
+															class="text-primary"><b>$15</b></span>
+													</h6>
+													<div class="iq-ratings">
+														<div
+															class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+															<i class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i> <i
+																class="far fa-star fa-xs me-1"></i>
+														</div>
+													</div>
+												</div>
+												<div class="d-flex justify-content-between mb-3">
+													<div class="iq-btn-container">
+														<a class="" href="javascript:void(0)"
+															data-alert="sweetalert-product">
+															<div class="btn btn-secondary animation-btn">
+																Add To Card <i aria-hidden="true"
+																	class="fas fa-long-arrow-alt-right ms-2"></i>
+															</div>
+														</a>
+													</div>
+													<div class="d-flex align-items-center">
+														<div class="iq-product-icon">
+															<a href="javascript:void(0)"
+																data-alert="sweetalert-heart"> <i
+																class="far fa-heart"></i>
+															</a>
+														</div>
+														<div class="iq-product-icon ms-2">
+															<a href="./cart.html"> <i class=" fa fa-eye"></i>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div-->
+		<section class="video section-padding-120 position-relative"
+			data-iq-gsap="onStart" data-iq-position-y="50" data-iq-rotate="0"
+			data-iq-trigger="scroll" data-iq-ease="power.inOut"
+			style="background: url(images/video/video-bg.jpg) no-repeat scroll right center; background-attachment: fixed; background-size: cover; min-height: 300px;">
+			<div class="background-overlay"></div>
+			<div class="container">
+				<div class="row">
+					<div class="iq-title-box text-center">
+						<span class="iq-subtitle text-white">Smart Grocery Shopping</span>
+						<h3 class="iq-title text-white">Always Be In The Know.</h3>
+						<div class="iq-title-divider bg-white"></div>
+					</div>
+					<!-- div class="col-lg-12 align-self-center">
+						<div class="iq-popup-video">
+							<div class="iq-video-img position-relative">
+								<div class="iq-video-icon  bg-secondary rounded-pill"
+									style="visibility: visible;">
+									<a data-fslightbox="gallery"
+										href="https://www.youtube.com/watch?v=XHOmBV4js_E"
+										class="iq-video popup-youtube"> <i
+										class="fas fa-play text-white"></i>
+									</a>
+									<div class="iq-waves">
+										<div class="waves wave-1"></div>
+										<div class="waves wave-2"></div>
+										<div class="waves wave-3"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div-->
+				</div>
+			</div>
+		</section>
+		<!-- section class="organic-products section-padding-120 pb-0 position-relative">
+  <img src="images/banner/shap-5.png" class="background-img background-img-7 img-fluid"
+    data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90" data-iq-ease="power.inOut" alt="shap-5">
+  <img src="images/banner/banner-shap-5.png" class="background-img background-img-8 img-fluid"
+    data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90" data-iq-ease="power.inOut" alt="banner-shap-5">
+  <div class="container">
+    <div class="scrolling-text text-center">
+      <div data-iq-gsap="onStart" data-iq-opacity="1" data-iq-position-x="200" data-iq-trigger="scroll"
+        data-iq-scroll-scrub="true" data-iq-ease="power.inOut">
+        Naturally
+      </div>
+    </div>
+    <div class="iq-title-box text-center">
+      <span class="iq-subtitle">No Chemicals, No Pesticides</span>
+      <h3 class="iq-title">Fresh Organic Products</h3>
+      <div class="iq-title-divider"></div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="iq-product-offer-block mb-lg-0 mb-4">
+          <div class="iq-offer-img">
+            <div class="iq-offer-back-img"></div>
+          </div>
+          <div class="d-block iq-offer-info text-center position-relative mt-3">
+            <h5 class="iq-offer-title text-white pt-5">Fresh Juice. <br> 100% Organic</h5>
+            <div class="iq-btn-container mt-4">
+              <div class="iq-btn-container">
+                  <a class="" href="./shop/shop-three-column.html">
+                    <div class="btn btn-secondary animation-btn">
+                        Shop Now
+                        <i aria-hidden="true" class="fas fa-long-arrow-alt-right ms-2"></i>
+                    </div>
+                  </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="iq-product-block">
+          <div class="row">
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-product">
+                <div class="card-body">
+                  <a href="./product/new-product.html">
+                    <div class="d-flex align-items-center">
+                      <div class="iq-product-img iq-product-image me-3">
+                        <img src="images/product/01.jpg" class="img-fluid" alt="product-image">
+                      </div>
+                      <div class="iq-product-info">
+                        <h5>Bread Breakfast</h5>
+                        <div class="iq-ratings">
+                          <ul class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><span class="text-body ms-1">(2)</span></li>
+                          </ul>
+                        </div>
+                        <h5 class="text-primary">$7.50</h5>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-product">
+                <div class="card-body">
+                  <a href="./product/new-product.html">
+                    <div class="d-flex align-items-center">
+                      <div class="iq-product-img iq-product-image me-3">
+                        <img src="images/product/02.jpg" class="img-fluid" alt="product-image">
+                      </div>
+                      <div class="iq-product-info">
+                        <h5>Heinz Ketchup</h5>
+                        <div class="iq-ratings">
+                          <ul class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><span class="text-body ms-1">(2)</span></li>
+                          </ul>
+                        </div>
+                        <h5 class="text-primary">$25</h5>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-product">
+                <div class="card-body">
+                  <a href="./product/new-product.html">
+                    <div class="d-flex align-items-center">
+                      <div class="iq-product-img iq-product-image me-3">
+                        <img src="images/product/03.jpg" class="img-fluid" alt="product-image">
+                      </div>
+                      <div class="iq-product-info">
+                        <h5>Side Dish</h5>
+                        <div class="iq-ratings">
+                          <ul class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><span class="text-body ms-1">(2)</span></li>
+                          </ul>
+                        </div>
+                        <h6 class="m-0">
+                          <small class="text-decoration-line-through">$10</small>
+                          <span class="text-primary h5">$8</span>
+                        </h6>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-product">
+                <div class="card-body">
+                  <a href="./product/new-product.html">
+                    <div class="d-flex align-items-center">
+                      <div class="iq-product-img iq-product-image me-3">
+                        <img src="images/product/04.png" class="img-fluid" alt="product-image">
+                      </div>
+                      <div class="iq-product-info">
+                        <h5>Bread</h5>
+                        <div class="iq-ratings">
+                          <ul class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><i class="fas fa-star fa-sm me-1"></i></li>
+                            <li><span class="text-body ms-1">(2)</span></li>
+                          </ul>
+                        </div>
+                        <h6 class="m-0">
+                          <small class="text-decoration-line-through">$10</small>
+                          <span class="text-primary h5">$8</span>
+                        </h6>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-product">
+                <div class="card-body">
+                  <a href="./product/new-product.html">
+                    <div class="d-flex align-items-center">
+                      <div class="iq-product-img iq-product-image me-3">
+                        <img src="images/product/05.jpg" class="img-fluid" alt="product-image">
+                      </div>
+                      <div class="iq-product-info">
+                        <h5>Nestle Fitness</h5>
+                        <div class="iq-ratings">
+                          <ul class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><span class="text-body ms-1">(2)</span></li>
+                          </ul>
+                        </div>
+                        <h5 class="text-primary">$300</h5>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-product">
+                <div class="card-body">
+                  <a href="./product/new-product.html">
+                    <div class="d-flex align-items-center">
+                      <div class="iq-product-img iq-product-image me-3">
+                        <img src="images/product/06.jpg" class="img-fluid" alt="product-image">
+                      </div>
+                      <div class="iq-product-info">
+                        <h5>Grapes</h5>
+                        <div class="iq-ratings">
+                          <ul class="d-flex align-items-center text-secondary list-inline p-0 m-0">
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><i class="far fa-star fa-sm me-1"></i></li>
+                            <li><span class="text-body ms-1">(2)</span></li>
+                          </ul>
+                        </div>
+                        <h6 class="m-0">
+                          <small class="text-decoration-line-through">$10</small>
+                          <span class="text-primary h5">$8</span>
+                        </h6>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section-->
+
+		<!-- section class="iq-product-offer position-relative overflow-hidden"
+			data-iq-gsap="onStart" data-iq-position-y="50" data-iq-rotate="0"
+			data-iq-trigger="scroll" data-iq-ease="power.inOut">
+			<img src="images/banner/shap-5.png"
+				class="background-img background-img-9 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="shap-5">
+			<div class="container">
+				<div class="iq-product-offer-block">
+					<div class="iq-offer-img">
+						<div class="iq-offer-back-img"></div>
+					</div>
+					<div class="iq-offer-info text-center">
+						<span class="iq-offer-sub">Weekend Offer</span>
+						<h3 class="iq-offer-title m-auto mb-4">Organic Foods Up To
+							50% off</h3>
+						<div class="iq-btn-container">
+							<a class="" href="./shop/shop-three-column.html">
+								<div class="btn btn-secondary animation-btn">
+									Shop Now <i aria-hidden="true"
+										class="fas fa-long-arrow-alt-right ms-2"></i>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section-->
+
+		<!-- section
+			class="iq-testimonial bg-primary section-padding-120 position-relative">
+			<img src="images/banner/banner-shap-5.png"
+				class="background-img background-img-10 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="banner-shap-5"> <img
+				src="images/banner/dish-1.png"
+				class="background-img background-img-11 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="dish-1">
+			<div class="container">
+				<div class="scrolling-text text-center">
+					<div data-iq-gsap="onStart" data-iq-opacity="1"
+						data-iq-position-x="200" data-iq-trigger="scroll"
+						data-iq-scroll-scrub="true" data-iq-ease="power.inOut">
+						Testimonial</div>
+				</div>
+				<div class="iq-title-box text-center">
+					<span class="iq-subtitle text-white">Testimonial</span>
+					<h3 class="iq-title text-white">What Our Customers Say</h3>
+					<div class="iq-title-divider bg-white"></div>
+				</div>
+				<div class="testimonial-slider overflow-hidden position-relative">
+					<ul class="swiper-wrapper list-inline m-0 p-0">
+						<li class="swiper-slide">
+							<div class="card mx-2">
+								<div class="card-body p-2">
+									<div class="iq-testimonial-main">
+										<div
+											class="iq-testimonial-desc d-flex align-items-center justify-content-between">
+											<p class="">There are many variations of passages of
+												Lorem Ipsum available, but the majority have suffered
+												alteration in some form, by injected humour, or randomised
+												words which don't look even slightly believable.</p>
+											<div class="iq-testimonial-icon">
+												<i aria-hidden="true" class="fas fa-quote-right"></i>
+											</div>
+										</div>
+										<div
+											class="iq-testimonial-user rounded d-flex justify-content-between">
+											<div class="text-center">
+												<h5 class="m-0 text-white">Shirley Edwards</h5>
+												<span class="text-white"><i>Manager</i></span>
+											</div>
+											<div class="iq-user-img">
+												<img src="images/testimonial/01.png" class="rounded"
+													alt="foodsto-user" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="swiper-slide">
+							<div class="card mx-2">
+								<div class="card-body p-2">
+									<div class="iq-testimonial-main">
+										<div
+											class="iq-testimonial-desc d-flex align-items-center justify-content-between">
+											<p class="">Contrary to popular belief, Lorem Ipsum is
+												not simply random text. It has roots in a piece of classical
+												Latin literature from 45 BC, making it over 2000 years old.</p>
+											<div class="iq-testimonial-icon">
+												<i aria-hidden="true" class="fas fa-quote-right"></i>
+											</div>
+										</div>
+										<div
+											class="iq-testimonial-user rounded d-flex justify-content-between">
+											<div class="text-center">
+												<h5 class="m-0 text-white">Brim Jesse</h5>
+												<span class="text-white"><i>CEO</i></span>
+											</div>
+											<div class="iq-user-img">
+												<img src="images/testimonial/02.png" class="rounded"
+													alt="foodsto-user" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="swiper-slide">
+							<div class="card mx-2">
+								<div class="card-body p-2">
+									<div class="iq-testimonial-main">
+										<div
+											class="iq-testimonial-desc d-flex align-items-center justify-content-between">
+											<p class="">Richard McClintock, a Latin professor at
+												Hampden-Sydney consectetur adip isicing elit, sed dolore
+												magna aliqua hampden. Latin professor at Hampden-Sydney
+												consectetur.</p>
+											<div class="iq-testimonial-icon">
+												<i aria-hidden="true" class="fas fa-quote-right"></i>
+											</div>
+										</div>
+										<div
+											class="iq-testimonial-user rounded d-flex justify-content-between">
+											<div class="text-center">
+												<h5 class="m-0 text-white">John Deo</h5>
+												<span class="text-white"><i>Web Developer</i></span>
+											</div>
+											<div class="iq-user-img">
+												<img src="images/testimonial/03.png" class="rounded"
+													alt="foodsto-user" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="swiper-slide">
+							<div class="card mx-2">
+								<div class="card-body p-2">
+									<div class="iq-testimonial-main">
+										<div
+											class="iq-testimonial-desc d-flex align-items-center justify-content-between">
+											<p class="">Contrary to popular belief, Lorem Ipsum is
+												not simply random text. It has roots in a piece of classical
+												Latin literature from 45 BC, making it over 2000 years old.</p>
+											<div class="iq-testimonial-icon">
+												<i aria-hidden="true" class="fas fa-quote-right"></i>
+											</div>
+										</div>
+										<div
+											class="iq-testimonial-user rounded d-flex justify-content-between">
+											<div class="iq-testimonial-metadata text-center">
+												<h5 class="m-0 text-white">Marina Childs</h5>
+												<span class="m-0 text-white"><i>Web Designer</i></span>
+											</div>
+											<div class="iq-user-img">
+												<img src="images/testimonial/04.png" class="rounded"
+													alt="foodsto-user" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="swiper-slide">
+							<div class="card mx-2">
+								<div class="card-body p-2">
+									<div class="iq-testimonial-main">
+										<div
+											class="iq-testimonial-desc d-flex align-items-center justify-content-between">
+											<p class="">Contrary to popular belief, Lorem Ipsum is
+												not simply random text. It has roots in a piece of classical
+												Latin literature from 45 BC, making it over 2000 years old.</p>
+											<div class="iq-testimonial-icon">
+												<i aria-hidden="true" class="fas fa-quote-right"></i>
+											</div>
+										</div>
+										<div
+											class="iq-testimonial-user rounded d-flex justify-content-between">
+											<div class="text-center">
+												<h5 class="m-0 text-white">Richard Probst</h5>
+												<span class="text-white"><i>Project Manager</i></span>
+											</div>
+											<div class="iq-user-img">
+												<img src="images/testimonial/05.png" class="rounded"
+													alt="foodsto-user" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li class="swiper-slide">
+							<div class="card mx-2">
+								<div class="card-body p-2">
+									<div class="iq-testimonial-main">
+										<div
+											class="iq-testimonial-desc d-flex align-items-center justify-content-between">
+											<p class="">There are many variations of passages of
+												Lorem Ipsum available, but the majority have suffered
+												alteration in some form, by injected humour, or randomised
+												words which don't look even slightly believable.</p>
+											<div class="iq-testimonial-icon">
+												<i aria-hidden="true" class="fas fa-quote-right"></i>
+											</div>
+										</div>
+										<div
+											class="iq-testimonial-user rounded d-flex justify-content-between">
+											<div class="text-center">
+												<h5 class="m-0 text-white">Ruby Driver</h5>
+												<span class="text-white"><i>Model</i></span>
+											</div>
+											<div class="iq-user-img">
+												<img src="images/testimonial/06.png" class="rounded"
+													alt="foodsto-user" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<img src="images/banner/dish-1.png"
+				class="background-img background-img-12 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="dish-1"> <img
+				src="images/banner/shap-5.png"
+				class="background-img background-img-13 img-fluid"
+				data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90"
+				data-iq-ease="power.inOut" alt="shap-5">
+		</section-->
+
+		<!-- section class="iq-blog section-padding-120 position-relative">
+  <img src="images/banner/shap-10.png" class="background-img background-img-14 img-fluid"
+    data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90" data-iq-ease="power.inOut" alt="shap-10">
+  <img src="images/banner/shap-11.png" class="background-img background-img-15 img-fluid"
+    data-iq-gsap="onStart" data-iq-position-x="150" data-iq-rotate="90" data-iq-ease="power.inOut" alt="shap-11">
+  <div class="container">
+    <div class="scrolling-text text-center">
+      <div data-iq-gsap="onStart" data-iq-opacity="1" data-iq-position-x="200" data-iq-trigger="scroll"
+        data-iq-scroll-scrub="true" data-iq-ease="power.inOut">
+        Blog
+      </div>
+    </div>
+    <div class="iq-title-box text-center">
+      <span class="iq-subtitle">Trending Topic</span>
+      <h3 class="iq-title">Foodsto Blog Posts</h3>
+      <div class="iq-title-divider"></div>
+    </div>
+    <div class="latest-blog overflow-hidden">
+      <ul class="swiper-wrapper list-inline m-0 p-0">
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/01.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  January 7, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Vegetables</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Healthy Vegetable Salads</h5>
+                  </a>
+          
+                  <p>Join the health bandwagon
+                    produced vegetables options.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/02.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  January 7, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Vegetables</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Baked Dishes</h5>
+                  </a>
+          
+                  <p>Adopt Mexican way of
+                    baking some of the most nutritious food.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/03.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  March 7, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Bakery</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Easy Avocado Recipes </h5>
+                  </a>
+          
+                  <p>Organic food and
+                    superfoods are delicious in a jiffy.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/04.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  March 21, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Fast Food</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Organic Sushi Lovers Guide</h5>
+                  </a>
+          
+                  <p>Vegetable Sushi makes a perfect
+                    dinner or evening snack idea.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/05.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  April 15, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Peanuts</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Storing Organic Produces</h5>
+                  </a>
+          
+                  <p>Preserve the nutritional value of
+                    organically produced products</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/06.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  July 18, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Breakfast</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Gluten-free Online Guide</h5>
+                  </a>
+          
+                  <p>Check out the most popular
+                    gluten-free recipes that works for you.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/07.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  July 20, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Food</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Citric Fruits 101 Online Guide</h5>
+                  </a>
+          
+                  <p>One line: Foodsto tells you how
+                    to get the most from citric fruits.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/08.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  July 22, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Sea-food</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">How To Use Lectus Leaves</h5>
+                  </a>
+          
+                  <p>Pinch of salt and pepper makes your
+                    Lectus salad the best salad ever!</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+        <li class="swiper-slide">
+          <div class="card  iq-blog">
+              <div class="card-header p-0">
+                  <div class="iq-blog-image clearfix">
+                      <img src="images/blog/09.png" alt="blog-img" class="img-fluid w-100">
+                  </div>
+              </div>
+              <div class="card-body position-relative ms-3">
+                  <ul class="iq-postdate">
+                       <li class="list-inline-item iq-blog-meta">							
+                          <a href="./blog/left-sidebar-blog.html" rel="bookmark">
+                              <span class="entry-date published updated">
+                                  July 25, 2021
+                              </span>
+                          </a>	
+                      </li>
+                  </ul>
+                  <div class="d-flex align-items-center iq-blog-meta mb-2">
+                      <div class="iq-blog-meta">
+                          <a href="./blog/one-column-blog.html" class="me-3"><i class="far fa-user me-2 "></i>admin</a>
+                      </div>
+                      <div class="iq-blog-category"><a href="./index.html" class="badge bg-primary">Bakery</a></div>
+                  </div>
+                  <a href="./blog/blog-detail.html" class="iq-title">
+                      <h5 class="mb-3">Organic Foods For Health</h5>
+                  </a>
+          
+                  <p>Packed with all nutritional values,
+                    organic sea-food diet.</p>
+          
+                  <a class="btn p-0 d-flex align-items-center iq-btn-link iq-btn-read-effect" href="./blog/blog-detail.html">
+                      <span class="iq-button-effact text-primary">
+                          Read More
+                          <i class="fas fa-long-arrow-alt-right text-primary ms-2"></i>
+                      </span>
+                  </a>
+              </div>
+          </div>        </li>
+      </ul>
+    </div>
+  </div>
+</section-->
+
+		<div th:replace="page-template.html :: footer"></div>
+
+		<div id="back-to-top" style="">
+			<a class="top" id="top" href="#top"> <svg width="30"
+					viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M5 15.5L12 8.5L19 15.5" stroke="currentColor"
+						stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</a>
+		</div>
+	</main>
+	<!-- Wrapper End-->
+	<!-- Library Bundle Script -->
+	<script src="js/libs.min.js"></script>
+
+	<!-- GSAP Animation JS-->
+	<script src="vendor/gsap/gsap.min.js"></script>
+	<script src="vendor/gsap/ScrollTrigger.min.js"></script>
+
+	<!-- App Script -->
+	<script src="js/app.js"></script>
+
+	<!-- Gsap Animation Init -->
+	<script src="js/gsap.js"></script>
+
+	<!-- Slider Script -->
+	<script src="js/slider.js"></script>
+
+	<!-- components -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+	<!-- Moment JS -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+	<!-- JavaScript for Cookie Consent Popup Message  -->
+	<link
+		href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.min.css"
+		rel="stylesheet">
+	<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"
+		data-cfasync="false"></script>
+	<!-- Price Format JS -->
+	<script src="js/jquery.priceformat.min.js"></script>
+	<script>
+		window.cookieconsent.initialise({
+			"palette" : {
+				"popup" : {
+					"background" : "#000"
+				},
+				"button" : {
+					"background" : "#f1d600"
+				}
+			},
+			"content" : {
+				"href" : "https://www.saversbasket.io/privacy.html"
+			}
+		});
+	</script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async
+		src="https://www.googletagmanager.com/gtag/js?id=G-CC2N6KJL6K"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			dataLayer.push(arguments);
+		}
+		gtag('js', new Date());
+		gtag('config', 'G-CC2N6KJL6K');
+	</script>
+
+</body>
+
+</html>

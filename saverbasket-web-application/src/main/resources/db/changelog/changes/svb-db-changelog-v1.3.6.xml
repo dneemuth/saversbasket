@@ -1,0 +1,194 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-6">
+        <createTable tableName="profile">
+            <column name="idProfile" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValueComputed="NULL" name="createdBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="createdDate" type="datetime"/>
+            <column defaultValueComputed="NULL" name="lastModifiedBy" type="INT"/>
+            <column defaultValueComputed="NULL" name="lastModifiedDate" type="datetime"/>
+            <column name="monitorKeyWords" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-7">
+        <createTable tableName="user_profile_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-9">
+        <addColumn tableName="address">
+            <column name="DTYPE" type="VARCHAR(31 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-10">
+        <addColumn tableName="product">
+            <column name="geoNotes" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-11">
+        <addColumn tableName="plan">
+            <column defaultValueComputed="NULL" name="numberOfDailyScansAllowed" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-12">
+        <addColumn tableName="product">
+            <column name="latitude" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-13">
+        <addColumn tableName="account">
+            <column defaultValueComputed="NULL" name="idPlan" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-14">
+        <addColumn tableName="product">
+            <column name="longitude" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-15">
+        <addColumn tableName="plan">
+            <column defaultValueComputed="NULL" name="planType" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-16">
+        <addColumn tableName="address">
+            <column name="district" type="VARCHAR(50 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-17">
+        <addColumn tableName="business">
+            <column name="geoNotes" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-18">
+        <addColumn tableName="business">
+            <column name="latitude" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-19">
+        <addColumn tableName="business">
+            <column name="longitude" type="VARCHAR(255 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-20">
+        <addColumn tableName="address">
+            <column name="zip" type="VARCHAR(8 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-21">
+        <addColumn tableName="address">
+            <column name="email" type="VARCHAR(100 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-22">
+        <addColumn tableName="address">
+            <column name="facebookPage" type="VARCHAR(150 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-23">
+        <addColumn tableName="address">
+            <column name="fax" type="VARCHAR(20 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-24">
+        <addColumn tableName="address">
+            <column name="homePage" type="VARCHAR(150 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-25">
+        <addColumn tableName="address">
+            <column name="openingHours" type="VARCHAR(200 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-26">
+        <addColumn tableName="address">
+            <column name="phoneNumber" type="VARCHAR(20 BYTE)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-27">
+        <addColumn tableName="address">
+            <column defaultValueComputed="NULL" name="idBusiness" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-28">
+        <addColumn tableName="user">
+            <column defaultValueComputed="NULL" name="idProfile" type="INT"/>
+        </addColumn>
+    </changeSet>   
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-30">
+        <createIndex indexName="FKh3nfhgtdrc5xs5qare37mpvc2" tableName="user">
+            <column defaultValueComputed="NULL" name="idProfile"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-31">
+        <createIndex indexName="FKiiodlwjcbsgw2ewpmonynfk38" tableName="address">
+            <column defaultValueComputed="NULL" name="idBusiness"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-32">
+        <createIndex indexName="FKqumoq74kttvx52oxyo753073h" tableName="account">
+            <column defaultValueComputed="NULL" name="idPlan"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-68">
+        <dropTable tableName="brand"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-69">
+        <dropTable tableName="brand_seq"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-70">
+        <dropTable tableName="business_address_seq"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-71">
+        <dropTable tableName="businessaddress"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-72">
+        <dropTable tableName="newsletter"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-73">
+        <dropTable tableName="newsletter_seq"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-74">
+        <dropTable tableName="product_disc_package_seq"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-75">
+        <dropTable tableName="product_sub_type_seq"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-76">
+        <dropTable tableName="productdiscountpackage"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-77">
+        <dropTable tableName="productsubtype"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-78">
+        <dropTable tableName="purchase_history_seq"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-79">
+        <dropTable tableName="purchasehistory"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-80">
+        <dropColumn columnName="idAccount" tableName="subscription"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-81">
+        <dropColumn columnName="idProductDiscountPackage" tableName="product"/>
+    </changeSet>   
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-1">
+        <modifyDataType columnName="city" newDataType="varchar(30)" tableName="address"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-2">
+        <modifyDataType columnName="isRefreshActive" newDataType="varchar(255)" tableName="deviceprofile"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-3">
+        <addDefaultValue columnDataType="varchar(255)" columnName="isRefreshActive" defaultValue="NULL" tableName="deviceprofile"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-4">
+        <addNotNullConstraint columnDataType="varchar(200)" columnName="username" tableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1639329962281-5">
+        <dropDefaultValue columnDataType="varchar(200)" columnName="username" tableName="user"/>
+    </changeSet>
+</databaseChangeLog>

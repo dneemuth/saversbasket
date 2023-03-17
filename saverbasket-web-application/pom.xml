@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.sb.web</groupId>
+	<artifactId>sb-comparison-shopping-web</artifactId>
+	<name>sb-comparison-shopping-web</name>	 
+	<parent>
+		<groupId>com.sb.parent</groupId>
+		<artifactId>sb-parent</artifactId>
+		<version>${env.project.version}</version>	 
+	</parent>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+		<dependency>
+            <groupId>eu.michael-simons</groupId>
+            <artifactId>wro4j-spring-boot-starter</artifactId>
+            <version>0.3.3</version>
+        </dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>		
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<exclusions>
+	        	<exclusion>
+	            	<groupId>org.apache.tomcat</groupId>
+	            	<artifactId>tomcat-jdbc</artifactId>
+	         	</exclusion>
+     		</exclusions>
+		</dependency>
+		
+		<dependency>
+		      <groupId>org.springframework.security</groupId>
+		      <artifactId>spring-security-oauth2-client</artifactId>
+		      <version>5.2.1.RELEASE</version>	 
+	    </dependency>
+			
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-mail</artifactId>		    
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-dependencies</artifactId>
+			<version>Dalston.SR3</version>
+			<type>pom</type>
+			<scope>import</scope>
+	    </dependency>
+
+		<dependency>
+			<!-- Starter for using Spring Security -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
+		<!-- dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-actuator-autoconfigure</artifactId>
+			<version>2.5.3</version>
+		</dependency -->
+		
+		<dependency>
+		    <groupId>org.springframework.session</groupId>
+		    <artifactId>spring-session-core</artifactId>		    
+		</dependency>	
+
+		<dependency>
+			<!-- Make method based security testing easier -->
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.zaxxer</groupId>
+		    <artifactId>HikariCP</artifactId>
+		    <version>3.2.0</version>
+		</dependency>
+		
+		<!-- caching library -->
+		<dependency>
+		  <groupId>com.github.ben-manes.caffeine</groupId>
+		  <artifactId>caffeine</artifactId>
+		  <version>3.0.5</version>
+		</dependency>
+		
+		<!-- entity auditing-->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-envers</artifactId>
+		</dependency> 
+
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>1.5.7</version>
+		</dependency>
+		
+		<dependency>
+			<!-- Automated JSON API documentation for API's built with Spring -->
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		
+		<dependency>
+			<!-- Generate beautiful documentation from a Swagger-compliant API. -->
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		
+		<dependency>
+			<!-- JSON Web Token Support -->
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+		
+		<dependency>
+			<!-- Model Mapper -->
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>28.1-jre</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.22</version>
+		</dependency>
+		
+		<!--Amazon SDK-->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.11.133</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses -->
+		<!-- dependency>
+		    <groupId>com.amazonaws</groupId>
+		    <artifactId>aws-java-sdk-ses</artifactId>
+		    <version>1.11.839</version>
+		</dependency-->
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-context</artifactId>
+			<version>2.2.3.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.liquibase</groupId>
+		     <artifactId>liquibase-core</artifactId>		    
+		</dependency>				
+		
+		<!-- Jose4J -->
+		<dependency>
+		    <groupId>org.bitbucket.b_c</groupId>
+		    <artifactId>jose4j</artifactId>
+		    <version>0.7.2</version>
+		  </dependency>
+		  
+		<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>   
+            <version>${webjars-locator.version}</version>         
+        </dependency>
+        
+        <dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>bootstrap</artifactId>
+		    <version>4.0.0-2</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>popper.js</artifactId>
+		    <version>1.12.9-1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jquery</artifactId>
+		    <version>3.0.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>font-awesome</artifactId>
+		    <version>5.15.4</version>
+		</dependency>
+				
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jquery-ui</artifactId>
+		    <version>1.12.0</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>Magnific-Popup</artifactId>
+		    <version>1.1.0</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>           
+            <scope>provided</scope>
+        </dependency>				
+		
+		<!-- fuzzy string matching -->
+		<dependency>
+		    <groupId>me.xdrop</groupId>
+		    <artifactId>fuzzywuzzy</artifactId>
+		    <version>1.3.0</version>
+		</dependency>
+		
+		<dependency>		
+		    <groupId>com.opencsv</groupId>
+		    <artifactId>opencsv</artifactId>
+		    <version>5.1</version>
+		</dependency>			
+	
+	    <!--  world food api  -->
+		<dependency>
+	        <groupId>pl.coderion</groupId>
+	        <artifactId>openfoodfacts-java-wrapper</artifactId>
+	        <version>0.9.3</version>
+	    </dependency>
+	
+		<!-- Logging dependencies -->			
+		 <dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>			
+		</dependency>
+		  
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>			
+		</dependency>	
+
+		<dependency>
+		    <groupId>org.javassist</groupId>
+		    <artifactId>javassist</artifactId>
+		    <version>3.18.2-GA</version>
+		  </dependency>		
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>			
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>			
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>			
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>			
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>			
+		</dependency>
+				
+		<dependency>
+		    <groupId>com.fasterxml.jackson.module</groupId>
+		    <artifactId>jackson-module-jaxb-annotations</artifactId>
+		    <version>2.11.0</version>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<finalName>sb-comparison-shopping-web</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>				
+			</resource>
+		</resources>
+		<plugins>
+		
+		<plugin>
+			     <groupId>org.apache.maven.plugins</groupId>
+			     <artifactId>maven-resources-plugin</artifactId>
+			     <configuration>
+			          <nonFilteredFileExtensions>
+			               <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+			               <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+			               <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+			                <nonFilteredFileExtension>js</nonFilteredFileExtension>
+			          </nonFilteredFileExtensions>
+			     </configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				 <configuration>
+                    <fork>true</fork>
+                    <mainClass>com.sb.web.SaverBasketApplication</mainClass>
+                </configuration>
+                  <executions>
+                   <execution>
+		              <id>build-info</id>
+		              <goals>
+		                <goal>build-info</goal>
+		              </goals>
+		       		</execution>
+                    <execution>
+                      <id>repackage</id>
+                      <goals>                        
+                        <goal>repackage</goal>
+                      </goals>
+                    </execution>
+                </executions>				
+			</plugin>
+			  
+			  <plugin>
+			        <groupId>org.liquibase</groupId>
+			        <artifactId>liquibase-maven-plugin</artifactId>			        
+			        <configuration>                  
+			            <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+			        </configuration>                
+			    </plugin>
+			
+		</plugins>
+	</build>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+</project>

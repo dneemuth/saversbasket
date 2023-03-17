@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="Javed.Neemuth (generated)" id="1640581300192-1">
+       <validCheckSum>ANY</validCheckSum>
+		<insert tableName="systemsetting">
+			<column name="idSystemSetting" value="5" />
+			<column name="systemKey"
+				value="SITE_MAINTENANCE_FLAG_ON" />
+			<column name="systemValue" value="N" />
+		</insert>
+		<rollback /> 
+    </changeSet> 
+    <changeSet author="Javed.Neemuth (generated)" id="1640581300192-2">
+       <validCheckSum>ANY</validCheckSum>
+		<insert tableName="systemsetting">
+			<column name="idSystemSetting" value="6" />
+			<column name="systemKey"
+				value="BARCODE_API_KEY" />
+			<column name="systemValue" value="sry6r3XPkTtPwgMTNS7DDB4MxCl23F5F" />
+		</insert>
+		<rollback /> 
+    </changeSet>       
+     <changeSet author="Javed.Neemuth (generated)" id="1642334758770-1">
+        <createTable tableName="country">
+            <column name="idCountry" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="countryCode" type="VARCHAR(10)"/>
+            <column name="countryName" type="VARCHAR(150)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1642334758770-2">
+        <createTable tableName="country_seq">
+            <column defaultValueComputed="NULL" name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1642334758770-4">
+        <addColumn tableName="address">
+            <column defaultValueComputed="NULL" name="idCountry" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="Javed.Neemuth (generated)" id="1642334758770-6">
+        <createIndex indexName="FKhpoaatpycs17omqvbw9279h19" tableName="address">
+            <column defaultValueComputed="NULL" name="idCountry"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

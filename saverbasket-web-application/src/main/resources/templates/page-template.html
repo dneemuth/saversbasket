@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html class="no-js" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="headerfiles">
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>SaversBasket - template page</title>
+<meta name="description" content="">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<!-- Favicon -->
+<link rel="shortcut icon" href="images/favicon.ico" />
+<!-- Library / Plugin Css Build -->
+<link rel="stylesheet" href="css/libs.min.css">
+<!-- fontawsome Css Build -->
+<link rel="stylesheet"
+	href="vendor/@fortawesome/fontawesome-free/css/all.min.css">
+<!-- Custom Css -->
+<link rel="stylesheet" href="css/foodsto.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<!--header area start-->
+	<div th:fragment="header">
+		<header class="header1  has-sticky" id="main-header">
+			<div class="container main-header">
+				<div class="row no-gutters">
+					<div class="col-sm-12">
+						<nav class="navbar navbar-expand-xl navbar-light menu py-0">
+							<div class="logo_block">
+								<a class="navbar-brand" href="./index.html"> <img
+									class="img-fluid logo" src="images/svblogo-mini-top.png" alt="foodsto">
+									<img class="img-fluid  logo-sticky" src="images/svblogo-mini-top.png"
+									alt="foodsto">
+								</a> <span class="appVersionNumber"
+									th:if="${appVersionNumber != null}"
+									th:text="${appVersionNumber}"></span>
+							</div>
+
+							<button class="navbar-toggler" type="button"
+								data-bs-toggle="collapse"
+								data-bs-target="#navbarSupportedContent"
+								aria-controls="navbarSupportedContent" aria-expanded="false"
+								aria-label="Toggle navigation">
+								<span class="foodsto-menu-box navbar-toggler-icon"><i
+									class="fas fa-bars"></i></span>
+							</button>
+							<div class="collapse navbar-collapse" id="navbarSupportedContent">
+								<div id="iq-menu-container" class="menu-main-menu-container">
+									<ul id="top-menu" class="navbar-nav">
+										<li class="active "><a href="javascript:void(0)"
+											aria-current="page" class="menu-item">Home <i
+												class="fas fa-chevron-down"></i></a>
+											<ul class="sub-menu">
+												<li class="current-menu-item"><a href="../index.html"
+													aria-current="page">Main Home</a></li>
+												<li><a href="../userSettings.html"
+													aria-current="page">User Settings</a></li>
+											</ul>
+										</li>
+										<!--li class="">
+				                                 <a href="javascript:void(0)" class="menu-item">Pages
+				                                     <i class="fas fa-chevron-down  toggledrop"></i></a>
+				                                 <ul class="sub-menu">
+				                                    <li class=""><a href="./about-us.html">About Us</a></li>
+				                                    <li  class=""><a href="./our-team.html">Our Team</a></li>
+				                                    <li  class=""><a href="./contact-us.html">Contact Us</a></li>
+				                                 </ul>
+				                              </li-->
+
+										<li class=""><a href="javascript:void(0)"
+											class="menu-item">Product <i
+												class="fas fa-chevron-down  toggledrop"></i>
+										</a>
+											<ul class="sub-menu">
+												
+												<li class=""><a th:href="@{/scanProduct}">Scan
+														Product</a></li>
+												<li class=""><a th:href="@{/newProduct?barcode=NA}">New
+														Product</a></li>
+												<li class=""><a th:href="@{/newBusiness}">New
+														Business</a></li>											
+											</ul></li>
+											
+										<li class=""><a href="javascript:void(0)"
+											class="menu-item">Basket <i
+												class="fas fa-chevron-down  toggledrop"></i>
+										</a>
+											<ul class="sub-menu">
+												<li class=""><a th:href="@{/listings}">Compare Prices</a></li>											
+											</ul></li>
+
+										<li class=""><a href="javascript:void(0)"
+											class="menu-item">Info <i
+												class="fas fa-chevron-down  toggledrop"></i>
+										</a>
+											<ul class="sub-menu">
+												<li class=""><a th:href="@{/contactus}">Contact </a></li>
+												<li class=""><a th:href="@{/aboutus}">About Us</a></li>
+											</ul>
+									</ul>
+								</div>
+							</div>
+							<div class="iq-shop-btn-holder">
+								<ul>
+									<!--li class="iq-cart">
+                              <a href="javascript:void(0)" class="dropdown-back" data-bs-toggle="dropdown">
+                                 <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                                 <div class="basket-item-count" style="display: inline;"><span class="cart-items-count count">4<span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>0.00</bdi></span></span></div>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-mini-cart">
+                                 <div class="widget_shopping_cart_content ">
+                                    <div>
+                                       <div class="d-flex flex-column justify-content-between shopping_cart_content">
+                                          <div class="d-flex justify-content-between">
+                                             <div class="d-flex">
+                                                <div class="me-3">
+                                                   <a href="./product/new-product.html"><img class="images-size rounded" alt="header-img" src="images/product/04.png"></a>
+                                                </div>
+                                                <div>
+                                                   <h6 class="mb-0">Juice-snacks</h6>
+                                                   <span>1 × $200.00</span>
+                                                </div>
+                                             </div>
+                                             <div>
+                                              <a  class="iq-product-remove" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+                                             </div>
+                                          </div>
+                                          <div class="d-flex  justify-content-between mt-3 ">
+                                             <div class="d-flex">
+                                                <div class="me-3">
+                                                   <a href="./product/new-product.html"><img class="images-size rounded" alt="header-img" src="images/product/01.jpg"></a>
+                                                </div>
+                                                <div>
+                                                   <h6 class="mb-0">Chips</h6>
+                                                   <span>1 × $10.00</span>
+                                                </div>
+                                             </div>
+                                             <div>
+                                               <a  class="iq-product-remove" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+                                             </div>
+                                          </div>
+                                          <div class="d-flex  justify-content-between mt-3">
+                                             <div class="d-flex">
+                                                <div class="me-3">
+                                                   <a href="./product/new-product.html"><img class="images-size rounded" alt="header-img" src="images/product/03.jpg"></a>
+                                                </div>
+                                                <div>
+                                                   <h6 class="mb-0">Bread Breakfast</h6>
+                                                   <span>1 × $7.50</span>
+                                                </div>
+                                             </div>
+                                             <div>
+                                               <a  class="iq-product-remove" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+                                             </div>
+                                          </div>
+                                          <div class="d-flex  justify-content-between mt-3">
+                                             <div class="d-flex">
+                                                <div class="me-3">
+                                                   <a href="./product/new-product.html"><img class="images-size rounded" alt="header-img" src="images/product/13.jpg"></a>
+                                                </div>
+                                                <div>
+                                                   <h6 class="mb-0">Broccoli</h6>
+                                                   <span>1 × $15</span>
+                                                </div>
+                                             </div>
+                                             <div >
+                                               <a  class="iq-product-remove" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="d-flex justify-content-between pt-3 border-top mt-3">
+                                             <p><strong>Subtotal:</strong></p>
+                                             <p>$232.50</p>
+                                       </div>
+                                       <div class="d-flex justify-content-between">
+                                          <div class="iq-button-viewcart" >
+                                             <a href="./cart.html" class="text-white">
+                                             <div class="d-flex align-items-center">
+                                                <span class="me-1 iq-button-effact">
+                                                   VIEW CART
+                                                </span>
+                                                <i aria-hidden="true" class="fas fa-long-arrow-alt-right"></i>
+                                             </div>
+                                             </a>
+                                          </div>
+                                          <div class=" iq-button-viewcart iq-button-checkout">
+                                             <a href="./checkout.html" class="text-white">
+                                             <div class="d-flex  align-items-center">
+                                                <span class="me-1 iq-button-effact">
+                                                   CHECKOUT
+                                                </span>
+                                                <i aria-hidden="true" class="fas fa-long-arrow-alt-right"></i>
+                                             </div>
+                                             </a>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </li-->
+                           <li class="iq-cart">
+                              <div class="wishlist_count">
+                                 <a href="./basket.html" data-count="0">
+                                    <i class="fa fa-shopping-basket"></i>
+                                 <span class="wcount" th:text="${basketItems}">0</span>
+                                 </a>
+                              </div>
+                           </li>
+									<!-- li>
+										<div class="search_count">
+											<a href="javascript:void(0)" id="btn-search-2"><i
+												class="fa fa-search" data-bs-backdrop="false"
+												data-bs-toggle="modal"
+												data-bs-target="#exampleModalFullscreen"></i></a>
+											<div class="modal fade bg-transparent"
+												data-bs-backdrop="false" id="exampleModalFullscreen"
+												tabindex="-1" aria-hidden="false">
+												<div class="modal-dialog modal-fullscreen iq-search-modal">
+													<div class="modal-content">
+														<div class="modal-header border-0">
+															<button type="button" class="btn-close bg-white"
+																data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div
+															class="modal-body d-flex align-items-center justify-content-center my-5">
+															<div class="my-5">
+																<div
+																	class="d-flex justify-content-center align-items-center flex-wrap">
+																	<input id="searchKeywords"
+																		class="border-0 border-bottom w-75 bg-black rounded-bottom"
+																		type="text" placeholder="Search Website"
+																		aria-label=".form-control-lg example"> <a
+																		id="btn-search-3"><i class="fa fa-search"></i></a>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</li-->
+
+									<!--  User Details  -->
+									<li class="iq-cart"><a href="javascript:void(0)"
+										class="dropdown-back" data-bs-toggle="dropdown"
+										aria-expanded="true"> <i class="fa fa-user"
+											aria-hidden="true"></i>
+											<div class="basket-item-count" style="display: inline;">
+												<span class="cart-items-count count" th:text="${userContributions}"><span
+													class="woocommerce-Price-amount amount"><bdi>
+														<span class="woocommerce-Price-currencySymbol">$</span>0.00</bdi></span></span>
+											</div>
+									</a>
+										<div class="dropdown-menu dropdown-menu-mini-cart">
+											<div class="widget_shopping_cart_content ">
+												<div>
+
+													<div>
+														<span th:text="${userLogged}" class="userLoggedFormat"><i
+															class="fa fa-info-circle"></i>User 1 </span>
+													</div>
+
+													<!-- div class="d-flex flex-column justify-content-between shopping_cart_content">
+													  <div class="d-flex justify-content-between">
+														 <div class="d-flex">
+															<div class="me-3">
+															   <a href="./product/new-product.html"><img class="images-size rounded" alt="header-img" src="./assets/images/product/04.png"></a>
+															</div>
+															<div>
+															   <h6 class="mb-0">Juice-snacks</h6>
+															   <span>1 × $200.00</span>
+															</div>
+														 </div>
+														 <div>
+														  <a class="iq-product-remove" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+														 </div>
+													  </div>
+													  <div class="d-flex  justify-content-between mt-3 ">
+														 <div class="d-flex">
+															<div class="me-3">
+															   <a href="./product/new-product.html"><img class="images-size rounded" alt="header-img" src="./assets/images/product/01.jpg"></a>
+															</div>
+															<div>
+															   <h6 class="mb-0">Chips</h6>
+															   <span>1 × $10.00</span>
+															</div>
+														 </div>
+														 <div>
+														   <a class="iq-product-remove" href="javascript:void(0)"><i class="fas fa-times"></i></a>
+														 </div>
+													  </div>                                      
+												   </div-->
+
+													<div
+														class="d-flex justify-content-between pt-3 border-top mt-3">
+														<p>
+															<strong>Total contributions:</strong>
+														</p>
+														<p>
+															<span class="userTotalContributions" th:text="${userContributions}">0</span>
+														</p>
+													</div>
+													<div class="d-flex justify-content-between">
+														<div class="iq-button-viewcart">
+															<a th:href="@{/logout}" class="text-white">
+																<div class="d-flex align-items-center">
+																	<span class="me-1 iq-button-effact"> SIGN OUT </span> <i
+																		aria-hidden="true" class="fas fa-long-arrow-alt-right"></i>
+																</div>
+															</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div></li>
+								</ul>
+							</div>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</header>
+	</div>
+	<!--header area end-->
+
+	<!--footer area start-->
+	<footer class="footer_widgets footer_border" th:fragment="footer">
+		<footer class="footer bg-soft-primary">
+			<div class="footer-body">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-6 col-sm-6 ">
+							<div class="footer-logo">
+								<a href="javascript:void(0)"> <img class="img-fluid"
+									src="images/svblogo-mini-top.png" alt="foodsto1">
+								</a>
+							</div>
+							<div class="widget mb-4">
+								<div class="textwidget text-body">
+									<p>
+										A Platform for CrowdSourced <br> Grocery Price Data.
+									</p>
+								</div>
+							</div>
+							<!-- ul class="info-share social-icone d-inline list-inline">
+								<li class="list-inline-item"><a href="javascript:void(0)"><i
+										class="fab fa-facebook"></i></a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)"><i
+										class="fab fa-twitter"></i></a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)"><i
+										class="fab fa-instagram"></i></a></li>
+								<li class="list-inline-item"><a href="javascript:void(0)"><i
+										class="fab fa-linkedin"></i></a></li>
+							</ul-->
+						</div>
+						<div class="col-lg-3 col-md-6 col-sm-6 mt-4 mt-lg-0 mt-md-0 ">
+							<div class="widget">
+								<h5 class="footer-title">Link</h5>
+								<div class="menu-footer1-container">
+									<!-- ul id="menu-footer1" class="menu list-inline p-0 m-0">
+										<li class="menu-item"><a href="./checkout.html"><i
+												class="fas fa-chevron-right me-2"></i>Checkout</a></li>
+										<li class="menu-item"><a href="./wishlist.html"><i
+												class="fas fa-chevron-right me-2"></i>Wishlist</a></li>
+										<li class="menu-item"><a href="./cart.html"><i
+												class="fas fa-chevron-right me-2"></i>Shopping Cart</a></li>
+									</ul-->
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+							<div class="widget">
+								<h5 class="footer-title">Information</h5>
+								<div class="menu-footer2-container">
+									<ul id="menu-footer2" class="menu list-inline p-0 m-0">
+										<li class="menu-item"><a th:href="@{/aboutus}"><i
+												class="fas fa-chevron-right me-2"></i>About</a></li>
+										<!-- li class="menu-item"><a href="/aboutus.html"><i
+												class="fas fa-chevron-right me-2"></i>Our Team</a></li-->
+										<li class="menu-item"><a th:href="@{/contactus}"><i
+												class="fas fa-chevron-right me-2"></i>Contact Us</a></li>
+										<li class="menu-item"><a
+											th:href="@{/privacy}"><i
+												class="fas fa-chevron-right me-2"></i>Privacy</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+							<div class="widget">
+								<h5 class="footer-title ">Quick Contact</h5>
+								<div class="row">
+									<div class="col-sm-12">
+										<ul class="iq-contact list-inline p-0 m-0">
+											<li><a href="javascript:void(0)"><i
+													class="fa fa-home"></i><span>Saint Pierre, Mauritius</span></a>
+											</li>
+											<li><a href="mailto:jondoe@demo.com"><i
+													class="fa fa-envelope"></i><span>info.svbasket@gmail.com</span></a>
+											</li>
+											<!-- li><a href="tel:+0123456789"><i class="fa fa-phone"></i><span>+0123456789</span></a>
+											</li-->
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<div class="copyright-footer bg-soft-primary">
+			<div class="container">
+				<div class="pt-3 pb-3">
+					<div class="d-flex justify-content-between">
+						<span class="copyright">Copyright 2021 SaversBasket All
+							Rights Reserved.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</footer>
+	<!--footer area end-->
+
+	<!-- Library Bundle Script -->
+	<script src="js/libs.min.js"></script>
+
+	<!-- GSAP Animation JS-->
+	<script src="vendor/gsap/gsap.min.js"></script>
+	<script src="vendor/gsap/ScrollTrigger.min.js"></script>
+
+	<!-- App Script -->
+	<script src="js/app.js"></script>
+
+	<!-- Gsap Animation Init -->
+	<script src="js/gsap.js"></script>
+
+	<!-- Slider Script -->
+	<script src="js/slider.js"></script>
+
+</body>
+</html>

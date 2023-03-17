@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>SaversBasket | View Listings</title>
+<meta name="description" content="">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<!-- Favicon -->
+<link rel="shortcut icon" href="images/favicon.ico" />
+<!-- Library / Plugin Css Build -->
+<link rel="stylesheet" href="css/libs.min.css">
+<!-- fontawsome Css Build -->
+<link rel="stylesheet"
+	href="vendor/@fortawesome/fontawesome-free/css/all.min.css">
+<link rel="stylesheet" type="text/css"
+	href="//cdn.jsdelivr.net/npm/anypicker@latest/dist/anypicker-all.min.css" />
+<!-- Custom Css -->
+<link rel="stylesheet" href="css/foodsto.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link
+	href="https://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.min.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+<!-- autocomplete plugin -->
+<script type="text/javascript"
+	src="http://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
+<script type="text/javascript"
+	src="//cdn.jsdelivr.net/npm/anypicker@latest/dist/anypicker.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+<script src="/js/jquery.formautofill.min.js"></script>
+<script type="text/javascript">
+
+</script>
+<style>
+
+span.basketPricePerRetailer {
+ 	margin-left: 20px;
+}
+
+span.wcount {
+
+    z-index: 10;
+    top: auto;   
+    bottom: 35px;
+    /* right: -4px; */
+    background: #ffba43;
+    -webkit-border-radius: 900px;
+    border-radius: 900px;
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+    line-height: 16px;
+    text-align: center;
+    font-size: 10px;
+    color: #fff;
+    top: 84px;
+
+}
+
+ul {
+  list-style: none;
+}
+
+ul li span.itemFont {
+	/** font-family: 'Marck Script', cursive; */
+	font-size: 12px;
+}
+
+ul li {
+  margin-bottom: 5px;
+  /** border-bottom: 2px #404B51 dotted; */
+  font-size: 15px;
+  line-height: 1;
+}
+
+ul li span:nth-child(odd) {
+  padding-right: 6px; 
+  color: #404B51;
+}
+
+ul li span:nth-child(even) {
+  float: right; 
+  padding-left: 6px;
+  color: #e43434;
+}
+
+ul span {
+  position: relative;
+  bottom: -7px;
+}
+
+.tagSavings {	
+	background-color: #009688;
+	-webkit-border-radius: 3px 4px 4px 3px;
+	-moz-border-radius: 3px 4px 4px 3px;	
+	border-left: 1px solid #979797;
+	/* This makes room for the triangle */
+	margin-left: 19px;
+	color: white;
+	font-weight: 300;	
+	line-height: 38px;
+	padding: 0 10px 0 10px;
+}
+
+/* Makes the triangle */
+.tagSavings:before {
+	content: "";
+	position: absolute;
+	display: block;
+	left: -19px;
+	width: 0;
+	height: 0;
+	border-top: 19px solid transparent;
+	border-bottom: 19px solid transparent;
+	border-right: 19px solid #009688;
+}
+
+/* Makes the circle */
+.tagSavings:after {
+	content: "";
+	background-color: white;
+	border-radius: 50%;
+	width: 4px;
+	height: 4px;
+	display: block;
+	position: absolute;
+	left: -9px;
+	top: 17px;
+}
+
+.tagExceedBudget {
+	background-color: #ff0000;
+	-webkit-border-radius: 3px 4px 4px 3px;
+	-moz-border-radius: 3px 4px 4px 3px;	
+	border-left: 1px solid #979797;
+	/* This makes room for the triangle */
+	margin-left: 19px;
+	color: white;
+	font-weight: 300;
+	font-size: 12px;
+	line-height: 38px;
+	padding: 0 10px 0 10px;
+}
+
+/* Makes the triangle */
+.tagExceedBudget:before {
+	content: "";
+	position: absolute;
+	display: block;
+	left: -19px;
+	width: 0;
+	height: 0;
+	border-top: 19px solid transparent;
+	border-bottom: 19px solid transparent;
+	border-right: 19px solid #ff0000;
+}
+
+/* Makes the circle */
+.tagExceedBudget:after {
+	content: "";
+	background-color: white;
+	border-radius: 50%;
+	width: 4px;
+	height: 4px;
+	display: block;
+	position: absolute;
+	left: -9px;
+	top: 17px;
+}
+
+</style>
+</head>
+
+<body class="  ">
+	<span class="screen-darken"></span>
+	<!-- loader Start -->
+	<div id="loading">
+		<div class="loader simple-loader">
+			<div class="loader-body"></div>
+		</div>
+	</div>
+	<!-- loader END -->
+	<main class="main-content">
+		<!--header area start-->
+		<div th:replace="page-template.html :: header"></div>
+		<!--header area end-->
+		<div class="iq-height" style="height: 89px;"></div>
+		<!--Nav End-->
+		<div class="text-left iq-breadcrumb-one iq-bg-over black"
+			style="background: url(images/banner/pages-banner.png); background-size: contain;">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-sm-12">
+						<nav aria-label="breadcrumb" class="text-center iq-breadcrumb-two">
+							<h2 class="title">Listings</h2>
+							<ol class="breadcrumb main-bg">
+								<li class="breadcrumb-item"><a href="./index.html"><i
+										class="fas fa-home me-2"></i>Home</a></li>
+								<li class="breadcrumb-item active">Listings</li>
+							</ol>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section-padding-120 position-relative">
+
+			<div class="container">
+			</div>
+			<div class="section-padding-120 position-relative">
+   <div class="container">
+    <div class="scrolling-text text-center">
+      <div data-iq-gsap="onStart" data-iq-opacity="1" data-iq-position-x="200" data-iq-trigger="scroll" data-iq-scroll-scrub="true" data-iq-ease="power.inOut" style="transform: translate3d(4.8899px, 0px, 0px); opacity: 1;">
+        Check For Basket Price At Each Store
+      </div>
+    </div>
+    <div class="iq-title-box text-center">
+      <!-- span class="iq-subtitle">Forecast</span-->
+      <h3 class="iq-title"> Looking for Basket Price At Each Store.</h3>
+      <div class="iq-title-divider"></div>
+    </div>
+    <div class="row">
+      <div class="tabs-wrapper">
+        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+          <li class="nav-item active" role="presentation" style="margin-right: 15px;">
+            <a class="nav-link active" id="pills-breakfast-cereals-tab" data-bs-toggle="pill" href="" data-bs-target="#pills-breakfast-cereals" role="tab" aria-controls="pills-breakfast-cereals" aria-selected="true">List View</a>
+          </li>          
+        </ul>
+      </div>
+      
+      <div th:if="${basketComparisonResult.maxBasketComparisonReached}" class="alert alert-warning" role="alert">
+		   You have exceeded the comparison limits configured for your plan.
+		</div>
+
+      <div class="tab-content mt-3" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-breakfast-cereals" role="tabpanel" aria-labelledby="pills-breakfast-cereals">
+          <div>
+            <div class="col">
+              <div class="card card-product">
+                  <div class="card-body">
+                  
+                  	<!--  table starts -->
+                  	<div class="table-responsive">
+                            <table class="table mb-5" id="basketForecastTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">&nbsp;</th>
+                                    <th scope="col">&nbsp;</th>
+                                    <th scope="col"><span>Store</span></th>
+                                    <th scope="col"><span>Aggregated Price</span></th>                                     
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr th:if="${basketComparisonResult.retailerBasketResponses!=null and !basketComparisonResult.retailerBasketResponses.empty}" th:each="basket : ${basketComparisonResult.retailerBasketResponses}">                         
+                              
+                                    <td class="vertical-middle">  
+                                    </td>
+                                    <td class="vertical-middle">
+                                         <a href="javascript:void(0)"><img th:src="${basket.businessLogoUrl}" class="rounded img-width-100" alt="01"></a>
+                                    </td>
+                                    <td class="vertical-middle" th:text="${basket.businessName}"></td>
+                                    <td class="vertical-middle"> 
+                                    	 <span>
+                                    	 	 <a href="#" data-count="0" onclick="showBasketDetails()">
+			                                    <i class="fa fa-shopping-basket"></i>
+			                                 	<span class="wcount"  th:if="${basket.totalProductItemsInBasket!=null}" th:text="${basket.totalProductItemsInBasket}">0</span>	                                 
+			                                 </a>
+			                                
+                                    	 </span>                                    
+		                                 
+		                                 <span th:if="${basket.totalBasketPricePerRetailer!=null}" th:text="${basket.totalBasketPricePerRetailer}" class="basketPricePerRetailer"></span>  
+		                                 <span>
+		                                 	<ul id="productsInBasket">
+		                                 		<li th:each="productTracked:${basket.productsTracked}" >
+		                                 			<span class="itemFont" th:text="${productTracked.productDescription}"></span><span th:text="${productTracked.updatedprice}"></span><span th:text="${productTracked.quantity}"></span>		                                 		
+		                                 		</li>  
+											</ul>
+		                                 </span>  
+		                                 <!--  span row for showing savings -->
+		                                 <span th:if="${basket.totalBasketPricePerRetailer > 0}">
+		                                 	 <span th:if="${basket.predictedSavings > 0}" class="tagSavings">Savings: MUR <span class="itemFont" th:text="${basket.predictedSavings}">0</span></span>
+		                                 	 <span th:if="${basket.predictedSavings < 0}" class="tagExceedBudget">Exceeded Planned Budget !</span>
+		                                 </span>                      
+                                 	</td>                               		
+                                </tr>                            
+                            </tbody>
+                        </table>
+                        </div>
+                     	<!-- table ends -->
+                  
+                  </div>
+              </div>
+            </div>        
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+  </div>
+</div>
+			
+		</div>
+
+		<div th:replace="page-template.html :: footer"></div>
+
+		<div id="back-to-top" style="">
+			<a class="top" id="top" href="#top"> <svg width="30"
+					viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M5 15.5L12 8.5L19 15.5" stroke="currentColor"
+						stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+				</svg>
+			</a>
+		</div>
+	</main>
+	<!-- Wrapper End-->
+	<!-- Library Bundle Script -->
+	<script src="js/libs.min.js"></script>
+
+	<!-- GSAP Animation JS-->
+	<script src="vendor/gsap/gsap.min.js"></script>
+	<script src="vendor/gsap/ScrollTrigger.min.js"></script>
+
+	<!-- App Script -->
+	<script src="js/app.js"></script>
+
+	<!-- Gsap Animation Init -->
+	<script src="js/gsap.js"></script>
+
+	<!-- Slider Script -->
+	<script src="js/slider.js"></script>
+	<!-- components -->
+	
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-CC2N6KJL6K"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'G-CC2N6KJL6K');
+	</script>
+
+</body>
+
+</html>
