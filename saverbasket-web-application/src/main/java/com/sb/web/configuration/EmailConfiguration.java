@@ -12,30 +12,7 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 @Configuration
 @ComponentScan(basePackages = { "com.sb.web.email" })
 public class EmailConfiguration {
-	
-	
-	//use for gmail
-	/**
-	@Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-        
-        mailSender.setUsername("info.saversbasket@gmail.com");
-        mailSender.setPassword("merveilles");
-        
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-        
-        return mailSender;
-    }
-	*/
-    
+ 
     @Bean
     public SimpleMailMessage templateSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
